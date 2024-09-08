@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PinjamDuluApp.Models
 {
-    internal class User
+    public class User
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -16,9 +16,23 @@ namespace PinjamDuluApp.Models
         public string ContactInformation { get; set; }
         public int ProfilePicture { get; set; }
 
+        private readonly BookList _bookList;
+
         public User(string name)
         {
             Name = name;
+
+            _bookList = new BookList();
+        }
+
+        public IEnumerable<Booking> GetBookingForUser(string userId)
+        {
+            return _bookList.GetBookingForUser(userId);
+        }
+
+        public void MakeBooking(Booking booking)
+        {
+            _bookList.AddBooking(booking);
         }
     }
 }
