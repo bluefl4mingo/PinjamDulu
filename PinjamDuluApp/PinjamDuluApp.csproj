@@ -9,8 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
+    <Compile Remove="Services\DatabaseService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\DecorImage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\DecorImage.png" />
   </ItemGroup>
 
 </Project>
