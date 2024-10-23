@@ -13,10 +13,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Poppins-Bold.ttf" />
+    <None Remove="Fonts\Poppins-Light.ttf" />
+    <None Remove="Fonts\Poppins-Medium.ttf" />
+    <None Remove="Fonts\Poppins-Regular.ttf" />
+    <None Remove="Fonts\Poppins-SemiBold.ttf" />
     <None Remove="Images\DecorImage.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\Poppins-Bold.ttf" />
+    <Resource Include="Fonts\Poppins-Light.ttf" />
+    <Resource Include="Fonts\Poppins-Medium.ttf" />
+    <Resource Include="Fonts\Poppins-Regular.ttf" />
+    <Resource Include="Fonts\Poppins-SemiBold.ttf" />
     <Resource Include="Images\DecorImage.png" />
   </ItemGroup>
 

@@ -9,16 +9,11 @@
     d:DesignHeight="1080"
     d:DesignWidth="1920"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Montserrat" />
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="FontFamily" Value="Montserrat" />
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="Foreground" Value="#1D1D21" />
         </Style>
     </Page.Resources>
 
@@ -53,7 +48,7 @@
                         Margin="0,0,0,0"
                         HorizontalAlignment="Center"
                         FontSize="25"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Foreground="#FFFFFF"
                         Text="Your Tech, Their Turn – &#x0a;Earn or Borrow with Ease" />
                 </StackPanel>
@@ -70,59 +65,65 @@
             Background="#FFFFFF"
             CornerRadius="0 5 5 0">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <!--LOG IN HEADER TEXT-->
+                <!--  LOG IN HEADER TEXT  -->
                 <TextBlock
                     Margin="0,0,0,30"
                     FontSize="36"
                     FontWeight="Bold"
                     Text="Log in" />
-                <!--EMAIL-->
+                <!--  EMAIL  -->
                 <TextBlock
                     Margin="0,0,0,7"
                     FontSize="20"
                     Text="Email address" />
-                <Border BorderThickness="1" BorderBrush="#D9D9D9" CornerRadius="7">
+                <Border
+                    BorderBrush="#B6B7BA"
+                    BorderThickness="1"
+                    CornerRadius="7">
                     <Grid Margin="7">
                         <TextBlock
-                            x:Name="logTextEmail" 
-                            Text="Email"
-                            Margin="8 5"
-                            Padding="0 2 0 0"
+                            x:Name="logTextEmail"
+                            Margin="8,5"
+                            Padding="0,2,0,0"
+                            MouseDown="logTextEmail_MouseDown"
                             Style="{StaticResource TextHint}"
-                            MouseDown="logTextEmail_MouseDown"/>
+                            Text="Email" />
                         <TextBox
                             x:Name="logBoxEmail"
-                            Margin="5"
                             MaxWidth="325"
-                            TextWrapping="NoWrap"
+                            Margin="5"
                             Style="{StaticResource TextBoxGeneral}"
-                            TextChanged="logBoxEmail_TextChanged"/>
+                            TextChanged="logBoxEmail_TextChanged"
+                            TextWrapping="NoWrap" />
                     </Grid>
                 </Border>
-                <!--PASSWORD-->
+                <!--  PASSWORD  -->
                 <TextBlock
                     Margin="0,20,0,7"
                     FontSize="20"
                     Text="Password" />
-                <Border BorderThickness="1" BorderBrush="#D9D9D9" CornerRadius="7" >
+                <Border
+                    BorderBrush="#B6B7BA"
+                    BorderThickness="1"
+                    CornerRadius="7">
                     <Grid Margin="7">
                         <TextBlock
-                            x:Name="logTextPassword" 
-                            Text="Password"
-                            Margin="8 5"
-                            Padding="0 2 0 0"
+                            x:Name="logTextPassword"
+                            Margin="8,5"
+                            Padding="0,2,0,0"
+                            MouseDown="logTextPassword_MouseDown"
                             Style="{StaticResource TextHint}"
-                            MouseDown="logTextPassword_MouseDown"/>
+                            Text="Password" />
                         <PasswordBox
                             x:Name="logBoxPassword"
-                            Margin="5"
                             MaxWidth="325"
-                            Style="{StaticResource TextBoxGeneral}" 
-                            PasswordChanged="logBoxPassword_TextChanged"/>
+                            Margin="5"
+                            PasswordChanged="logBoxPassword_TextChanged"
+                            Style="{StaticResource TextBoxGeneral}" />
                     </Grid>
                 </Border>
-                
-                <!--LOGIN BUTTON-->
+
+                <!--  LOGIN BUTTON  -->
                 <Button
                     Width="353"
                     Height="56"
@@ -130,18 +131,20 @@
                     Content="Log In"
                     Style="{StaticResource ButtonGeneral}" />
 
-                <!--BELUM PUNYA AKUN-->
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
+                <!--  BELUM PUNYA AKUN  -->
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal">
                     <TextBlock FontSize="20" Text="Belum punya akun?" />
                     <Button
-                        Height="30"
-                        Padding="0, 0, 0 5"
-                        FontSize="20"
-                        FontWeight="SemiBold"
-                        Background="Transparent"
-                        BorderThickness="0"
+                        Height="33"
+                        Padding="0,0,0,5"
+                        Command="{Binding NavigateToSignUpCommand}"
+                        Style="{StaticResource ButtonTransparent}"
                         Content=" Sign up "
-                        Command="{Binding NavigateToSignUpCommand}"/>
+                        FontSize="20"
+                        FontWeight="Bold" />
                 </StackPanel>
 
             </StackPanel>
