@@ -4,16 +4,13 @@ using System.Windows.Controls;
 
 namespace PinjamDuluApp.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginPage.xaml
-    /// </summary>
     public partial class LoginPage : Page
     {
         private LoginViewModel _viewModel;
         public LoginPage()
         {
             InitializeComponent();
-            _viewModel = new LoginViewModel(MainWindow.NavigationService);
+            _viewModel = new LoginViewModel(MainWindow.NavigationService); // Every ViewModel's constructor receives NavigationServices to transition between pages
             DataContext = _viewModel;
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
+using PinjamDuluApp.ViewModels;
 
 namespace PinjamDuluApp.Views
 {
@@ -9,9 +10,13 @@ namespace PinjamDuluApp.Views
     /// </summary>
     public partial class FillUserInfoPage : Page
     {
-        public FillUserInfoPage()
+        private FillUserInfoViewModel _viewModel;
+
+        public FillUserInfoPage(string email, string password)
         {
             InitializeComponent();
+            _viewModel = new FillUserInfoViewModel(MainWindow.NavigationService, email, password);
+            DataContext = _viewModel;
         }
 
         private void textFullName_MouseDown(object sender, MouseButtonEventArgs e)

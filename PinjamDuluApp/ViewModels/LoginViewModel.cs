@@ -1,13 +1,14 @@
 ﻿using System.Windows.Input;
-using PinjamDuluApp.Services;
 using PinjamDuluApp.Views;
 using PinjamDuluApp.Helpers;
+using PinjamDuluApp.Services;
+using PinjamDuluApp.ViewModels;
 
 namespace PinjamDuluApp.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
-        //private readonly DatabaseService _databaseService;
+        private readonly DatabaseService _databaseService;
         private readonly NavigationService _navigationService;
 
         private string _email;
@@ -37,10 +38,10 @@ namespace PinjamDuluApp.ViewModels
 
         public LoginViewModel(NavigationService navigationService)
         {
-            //_databaseService = new DatabaseService();
+            _databaseService = new DatabaseService();
             _navigationService = navigationService;
 
-            //LoginCommand = new RelayCommand(async () => await Login(), CanLogin);
+            LoginCommand = new RelayCommand(async () => await Login(), CanLogin);
             NavigateToSignUpCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(SignUpPage)));
         }
 
@@ -49,25 +50,26 @@ namespace PinjamDuluApp.ViewModels
             return !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password);
         }
 
-        //private async Task Login()
-        //{
-        //    try
-        //    {
-        //        var user = await _databaseService.AuthenticateUser(Email, Password);
-        //        if (user != null)
-        //        {
-        //            // TODO: Store user session
-        //            _navigationService.NavigateTo(typeof(HomePage), user);
-        //        }
-        //        else
-        //        {
-        //            ErrorMessage = "Invalid email or password. Please try again.";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorMessage = "An error occurred during login: " + ex.Message;
-        //    }
-        //}
+        private async Task Login()
+        {
+            try
+            {
+                var user = await _databaseService.AuthenticateUser(Email, Password);
+                if (user != null)
+                {
+                    // TODO: Store user session
+                    _navigationService.NavigateTo(typeof(HomePage), user);
+                }
+                else
+                {
+                    ErrorMessage = "Invalid email or password. Please try again.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "An error occurred during login: " + ex.Message;
+                System.Windows.MessageBox.Show($"An error occurred during login: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+        }
     }
 }
