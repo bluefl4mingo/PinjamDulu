@@ -144,7 +144,7 @@ namespace PinjamDuluApp.Views
                 barBtn1.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFrom("#B6B7BA");
                 barBtn2.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFrom("#1D1D21");
                 nextBtn.Visibility = Visibility.Collapsed;
-
+                createAccBtn.Visibility = Visibility.Visible;
             }
         }
     }

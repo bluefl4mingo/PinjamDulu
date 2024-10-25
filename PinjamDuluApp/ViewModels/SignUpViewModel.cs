@@ -66,7 +66,7 @@ namespace PinjamDuluApp.ViewModels
             {
                 if (await _databaseService.CheckEmailExists(Email))
                 {
-                    ErrorMessage = "Email already exists";
+                    ErrorMessage = "*Email already exists";
                     return;
                 }
 
@@ -75,7 +75,7 @@ namespace PinjamDuluApp.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"An error occurred during sign up: {ex.Message}";
+                ErrorMessage = $"*An error occurred during sign up: {ex.Message}";
                 System.Windows.MessageBox.Show($"An error occurred during sign up: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }

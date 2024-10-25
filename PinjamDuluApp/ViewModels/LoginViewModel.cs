@@ -62,12 +62,12 @@ namespace PinjamDuluApp.ViewModels
                 }
                 else
                 {
-                    ErrorMessage = "Invalid email or password. Please try again.";
+                    ErrorMessage = "*Invalid email or password. Please try again.";
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = "An error occurred during login: " + ex.Message;
+                ErrorMessage = "*An error occurred during login: " + ex.Message;
                 System.Windows.MessageBox.Show($"An error occurred during login: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }

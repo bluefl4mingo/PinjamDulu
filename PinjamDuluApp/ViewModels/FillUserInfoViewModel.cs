@@ -85,6 +85,9 @@ namespace PinjamDuluApp.ViewModels
         {
             return !string.IsNullOrWhiteSpace(FullName) &&
                    !string.IsNullOrWhiteSpace(Username) &&
+                   !string.IsNullOrWhiteSpace(Address) &&
+                   !string.IsNullOrWhiteSpace(City) &&
+                   !string.IsNullOrWhiteSpace(Contact) &&
                    BirthDate.HasValue &&
                    _profilePicture != null;
         }
@@ -107,7 +110,7 @@ namespace PinjamDuluApp.ViewModels
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show($"Error uploading profile picture: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                    ErrorMessage = "Error uploading profile picture: " + ex.Message;
+                    ErrorMessage = "*Error uploading profile picture: " + ex.Message;
                 }
             }
         }
@@ -134,12 +137,13 @@ namespace PinjamDuluApp.ViewModels
                 }
                 else
                 {
-                    ErrorMessage = "Failed to create account. Please try again.";
+                    ErrorMessage = "*Failed to create account. Please try again.";
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = "An error occurred while creating your account: " + ex.Message;
+                ErrorMessage = "*An error occurred while creating your account: " + ex.Message;
+                //System.Windows.MessageBox.Show($"Error creating account: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK);
             }
         }
     }

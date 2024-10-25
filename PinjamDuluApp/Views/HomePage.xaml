@@ -1,15 +1,160 @@
-﻿<Page x:Class="PinjamDuluApp.Views.HomePage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:PinjamDuluApp.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="HomePage">
+﻿<Page
+    x:Class="PinjamDuluApp.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PinjamDuluApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="HomePage"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+    </Page.Resources>
 
     <Grid Background="white">
-        <TextBlock HorizontalAlignment="Center" Margin="0,171,0,0" TextWrapping="Wrap" Text="BERHASIL AUTENTIKASI" VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  HEADER NAV BAR  -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!--  PINJAM DULU LOGO  -->
+            <TextBlock
+                Margin="50,0,50,0"
+                VerticalAlignment="Center"
+                FontSize="30"
+                FontWeight="Bold"
+                Text="PinjamDulu">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                        <GradientStop Offset="0.2" Color="#FFFFFF" />
+                        <GradientStop Offset="0.79" Color="#CBAEAE" />
+                        <GradientStop Offset="1" Color="#F5C8AB" />
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
+            <!--  SEARCH BAR  -->
+            <Border
+                Width="910"
+                Height="70"
+                BorderBrush="#B6B7BA"
+                BorderThickness="1"
+                CornerRadius="7">
+                <Grid Margin="7">
+                    <TextBlock
+                        x:Name="textSearch"
+                        Margin="8,5"
+                        Padding="0,2,0,0"
+                        Style="{StaticResource TextHint}"
+                        Text="Cari Gadget" />
+                    <TextBox
+                        x:Name="boxSearch"
+                        MaxWidth="325"
+                        Margin="5"
+                        Style="{StaticResource TextBoxGeneral}" />
+                </Grid>
+            </Border>
+
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ShopCart.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Rental" />
+                </StackPanel>
+            </Button>
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ListIcon.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Listing" />
+                </StackPanel>
+            </Button>
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                Content="Profile"
+                FontWeight="Bold"
+                Style="{StaticResource ButtonGeneral2}" />
+        </StackPanel>
+
+        <!--<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Gadgets}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding DataContext.GadgetSelectedCommand,
+                        RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                        CommandParameter="{Binding}"
+                        Margin="10">
+                            <Grid Width="200">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="200"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Image Grid.Row="0"
+                               Source="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}"
+                               Stretch="UniformToFill"/>
+
+                                <TextBlock Grid.Row="1"
+                                   Text="{Binding Title}"
+                                   FontWeight="Bold"
+                                   Margin="5"/>
+
+                                <TextBlock Grid.Row="2"
+                                   Text="{Binding RentalPrice, StringFormat='Rp. {0:N0}/day'}"
+                                   Margin="5"/>
+
+                                <StackPanel Grid.Row="3"
+                                  Orientation="Horizontal"
+                                  Margin="5">
+                                    <TextBlock Text="{Binding OwnerCity}"/>
+                                    <TextBlock Text=" | "/>
+                                    <TextBlock Text="{Binding GadgetRating, StringFormat='{}{0:F1}★'}"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="4"
+                                   Text="{Binding TimesRented, StringFormat='Rented {0} times'}"
+                                   Margin="5"/>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>-->
+
+
 
     </Grid>
 </Page>

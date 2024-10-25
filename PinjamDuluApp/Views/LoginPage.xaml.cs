@@ -12,6 +12,11 @@ namespace PinjamDuluApp.Views
             InitializeComponent();
             _viewModel = new LoginViewModel(MainWindow.NavigationService); // Every ViewModel's constructor receives NavigationServices to transition between pages
             DataContext = _viewModel;
+
+            logBoxPassword.PasswordChanged += (s, e) =>
+            {
+                _viewModel.Password = logBoxPassword.Password;
+            };
         }
 
         private void logTextEmail_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
