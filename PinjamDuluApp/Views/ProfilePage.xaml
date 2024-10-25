@@ -1,0 +1,257 @@
+﻿<Page
+    x:Class="PinjamDuluApp.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PinjamDuluApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ProfilePage"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+
+        <Style x:Key="ProfileAttributeText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Foreground" Value="#1D1D21" />
+        </Style>
+
+        <Style x:Key="ProfileDataText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Foreground" Value="#747680" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  HEADER NAV BAR  -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!--  PINJAM DULU LOGO  -->
+            <TextBlock
+                Margin="50,0,50,0"
+                VerticalAlignment="Center"
+                FontSize="30"
+                FontWeight="Bold"
+                Text="PinjamDulu">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                        <GradientStop Offset="0.2" Color="#FFFFFF" />
+                        <GradientStop Offset="0.79" Color="#CBAEAE" />
+                        <GradientStop Offset="1" Color="#F5C8AB" />
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
+            <!--  SEARCH BAR  -->
+            <Border
+                Width="910"
+                Height="70"
+                BorderBrush="#B6B7BA"
+                BorderThickness="1"
+                CornerRadius="7">
+                <Grid Margin="7">
+                    <TextBlock
+                        x:Name="textSearch"
+                        Margin="8,5"
+                        Padding="0,2,0,0"
+                        Style="{StaticResource TextHint}"
+                        Text="Cari Gadget" />
+                    <TextBox
+                        x:Name="boxSearch"
+                        MaxWidth="325"
+                        Margin="5"
+                        Style="{StaticResource TextBoxGeneral}" />
+                </Grid>
+            </Border>
+
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ShopCart.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Rental" />
+                </StackPanel>
+            </Button>
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ListIcon.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Listing" />
+                </StackPanel>
+            </Button>
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                Content="Profile"
+                FontWeight="Bold"
+                Style="{StaticResource ButtonGeneral2}" />
+        </StackPanel>
+
+        <!--  PROFILE CONTENT  -->
+        <Border
+            Grid.Row="1"
+            Width="1052"
+            Height="557"
+            BorderBrush="#B6B7BA"
+            BorderThickness="3"
+            CornerRadius="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="310" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  PROFILE PICTURE  -->
+                <StackPanel Grid.Column="0">
+                    <Image Width="280" Height="280" />
+                    <Button />
+                </StackPanel>
+
+                <!--  PROFILE HEADER TEXT  -->
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="20,40,0,0"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Text="Ubah Biodata Diri" />
+
+                <!--  EDIT BUTTON  -->
+                <Button
+                    Grid.Column="1"
+                    Width="40"
+                    Height="26"
+                    Margin="0,46,90,0"
+                    VerticalAlignment="Top"
+                    Content="Edit"
+                    FontSize="18"
+                    Style="{StaticResource ButtonTransparent2}">
+                    <Button.Foreground>
+                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                            <GradientStop Offset="0.2" Color="#FFFFFF" />
+                            <GradientStop Offset="0.79" Color="#CBAEAE" />
+                            <GradientStop Offset="1" Color="#F5C8AB" />
+                        </LinearGradientBrush>
+                    </Button.Foreground>
+                </Button>
+
+                <!--  SIGN OUT BUTTON  -->
+                <Button
+                    Grid.Column="1"
+                    Width="90"
+                    Height="28"
+                    Margin="0,40,25,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    FontWeight="Medium"
+                    Style="{StaticResource ButtonTransparent2}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Width="30"
+                            Height="30"
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Source="/Images/ExitButton.png" />
+                        <TextBlock VerticalAlignment="Center" Text="Sign Out" />
+                    </StackPanel>
+                </Button>
+
+                <!--  PROFILE ATTRIBUTES  -->
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="20,0,0,0"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Nama Lengkap" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Username" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Tanggal Lahir" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Alamat" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Kota" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Kontak" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileAttributeText}"
+                        Text="Email" />
+                </StackPanel>
+
+                <!--  PROFILE DATA  -->
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Nama Lengkap" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Username" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Tanggal Lahir" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Alamat" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Kota" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Kontak" />
+                    <TextBlock
+                        Margin="0 10"
+                        Style="{StaticResource ProfileDataText}"
+                        Text="Email" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Page>

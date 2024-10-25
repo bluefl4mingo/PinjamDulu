@@ -93,6 +93,7 @@
                             MaxWidth="325"
                             Margin="5"
                             Style="{StaticResource TextBoxGeneral}"
+                            Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                             TextChanged="signBoxEmail_TextChanged" />
                     </Grid>
                 </Border>
@@ -147,13 +148,25 @@
                     </Grid>
                 </Border>
 
+                <!--  ERROR MESSAGE TEXT  -->
+                <TextBlock
+                    x:Name="logErrorText"
+                    Width="353"
+                    Margin="0,25,0,0"
+                    FontSize="16"
+                    Foreground="Red"
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"/>
+
                 <!--  SIGNUP BUTTON  -->
                 <Button
                     Width="353"
                     Height="56"
-                    Margin="0,35,0,55"
+                    Margin="0,30,0,55"
                     Content="Sign Up"
-                    Style="{StaticResource ButtonGeneral}" />
+                    Style="{StaticResource ButtonGeneral}"
+                    Command="{Binding SignUpCommand}"/>
 
                 <!--  SUDAH PUNYA AKUN  -->
                 <StackPanel
@@ -166,10 +179,10 @@
                         Height="33"
                         Padding="0,0,0,5"
                         Command="{Binding NavigateToLoginCommand}"
-                        Style="{StaticResource ButtonTransparent}"
                         Content=" Log in "
                         FontSize="20"
-                        FontWeight="Bold" />
+                        FontWeight="Bold"
+                        Style="{StaticResource ButtonTransparent}" />
                 </StackPanel>
 
             </StackPanel>

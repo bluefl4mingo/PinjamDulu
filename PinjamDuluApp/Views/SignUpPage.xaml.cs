@@ -15,6 +15,16 @@ namespace PinjamDuluApp.Views
             InitializeComponent();
             _viewModel = new SignUpViewModel(MainWindow.NavigationService);
             DataContext = _viewModel;
+
+            signBoxPassword.PasswordChanged += (s, e) =>
+            {
+                _viewModel.Password = signBoxPassword.Password;
+            };
+
+            signBoxConfPassword.PasswordChanged += (s, e) =>
+            {
+                _viewModel.ConfirmPassword = signBoxConfPassword.Password;
+            };
         }       
 
         private void signTextEmail_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

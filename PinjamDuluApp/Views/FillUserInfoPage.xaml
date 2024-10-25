@@ -86,7 +86,7 @@
                     x:Name="infoPanel1"
                     Grid.Row="1"
                     Width="353"
-                    Margin="0,0,0,35"
+                    Margin="0,0,0,15"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top">
                     <!--  FULL NAME  -->
@@ -111,6 +111,7 @@
                                 MaxWidth="325"
                                 Margin="5"
                                 Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxFullName_TextChanged" />
                         </Grid>
                     </Border>
@@ -142,6 +143,7 @@
                                 MaxWidth="325"
                                 Margin="5,5,5,5"
                                 Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxUsername_TextChanged" />
                         </Grid>
                     </Border>
@@ -168,6 +170,7 @@
                                 MaxWidth="325"
                                 Margin="5"
                                 FontSize="18"
+                                SelectedDate="{Binding BirthDate}"
                                 Style="{StaticResource TextBoxGeneral}" />
                         </Grid>
                     </Border>
@@ -179,7 +182,7 @@
                     x:Name="infoPanel2"
                     Grid.Row="1"
                     Width="353"
-                    Margin="0,0,0,35"
+                    Margin="0,0,0,15"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Visibility="Collapsed">
@@ -205,6 +208,7 @@
                                 MaxWidth="325"
                                 Margin="5"
                                 Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxAddress_TextChanged" />
                         </Grid>
                     </Border>
@@ -230,10 +234,11 @@
                                 MaxWidth="325"
                                 Margin="5"
                                 Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding City, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxCity_TextChanged" />
                         </Grid>
                     </Border>
-                    <!--  DATE  -->
+                    <!--  CONTACT  -->
                     <TextBlock
                         Margin="0,20,0,7"
                         FontSize="20"
@@ -255,6 +260,7 @@
                                 MaxWidth="325"
                                 Margin="5"
                                 Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding Contact, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxContact_TextChanged" />
                         </Grid>
                     </Border>
@@ -276,6 +282,7 @@
                             Grid.Column="1"
                             Width="170"
                             Height="38"
+                            Command="{Binding UploadProfilePictureCommand}"
                             Content="Upload"
                             Style="{StaticResource ButtonGeneral2}" />
                     </Grid>
@@ -287,11 +294,24 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+
+                    <!--  ERROR MESSAGE TEXT  -->
+                    <TextBlock
+                        x:Name="logErrorText"
+                        Grid.Row="0"
+                        Width="353"
+                        Margin="0,0,0,20"
+                        FontSize="16"
+                        Foreground="Red"
+                        Text="{Binding ErrorMessage}"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
 
                     <!--  BAR BUTTON  -->
                     <StackPanel
-                        Grid.Row="0"
+                        Grid.Row="1"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
                         <Button
@@ -299,6 +319,7 @@
                             Width="170"
                             Height="9"
                             Margin="0,0,5,0"
+                            Background="#1D1D21"
                             Click="barBtn1_Click"
                             Style="{StaticResource ButtonBar}" />
                         <Button
@@ -306,6 +327,7 @@
                             Width="170"
                             Height="9"
                             Margin="5,0,0,0"
+                            Background="#B6B7BA"
                             Click="barBtn2_Click"
                             Style="{StaticResource ButtonBar}" />
                     </StackPanel>
@@ -313,7 +335,7 @@
                     <!--  NEXT BUTTON  -->
                     <Button
                         x:Name="nextBtn"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Width="353"
                         Height="56"
                         Margin="0,35,0,0"
@@ -324,10 +346,11 @@
                     <!--  CREATE ACCOUNT BUTTON  -->
                     <Button
                         x:Name="createAccBtn"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Width="353"
                         Height="56"
                         Margin="0,35,0,0"
+                        Command="{Binding CreateAccountCommand}"
                         Content="Buat Akun"
                         Style="{StaticResource ButtonGeneral}"
                         Visibility="Collapsed" />

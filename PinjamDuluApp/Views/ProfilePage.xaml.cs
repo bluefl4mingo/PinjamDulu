@@ -1,6 +1,4 @@
-﻿using PinjamDuluApp.ViewModels;
-using PinjamDuluApp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,15 +16,13 @@ using System.Windows.Shapes;
 namespace PinjamDuluApp.Views
 {
     /// <summary>
-    /// Interaction logic for HomePage.xaml
+    /// Interaction logic for ProfilePage.xaml
     /// </summary>
-    public partial class HomePage : Page
+    public partial class ProfilePage : Page
     {
-        public HomePage(User user)
+        public ProfilePage()
         {
-            DataContext = new HomeViewModel(MainWindow.NavigationService, user);
             InitializeComponent();
         }
-
     }
 }

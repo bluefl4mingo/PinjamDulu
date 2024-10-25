@@ -19,6 +19,14 @@
     <None Remove="Fonts\Poppins-Regular.ttf" />
     <None Remove="Fonts\Poppins-SemiBold.ttf" />
     <None Remove="Images\DecorImage.png" />
+    <None Remove="Images\ExitButton.png" />
+    <None Remove="Images\ListIcon.png" />
+    <None Remove="Images\SearchIcon.png" />
+    <None Remove="Images\ShopCart.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="bin\Debug\net8.0-windows\appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +43,10 @@
     <Resource Include="Fonts\Poppins-Regular.ttf" />
     <Resource Include="Fonts\Poppins-SemiBold.ttf" />
     <Resource Include="Images\DecorImage.png" />
+    <Resource Include="Images\ExitButton.png" />
+    <Resource Include="Images\ListIcon.png" />
+    <Resource Include="Images\SearchIcon.png" />
+    <Resource Include="Images\ShopCart.png" />
   </ItemGroup>
 
 </Project>

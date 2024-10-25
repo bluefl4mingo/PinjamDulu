@@ -93,6 +93,7 @@
                             MaxWidth="325"
                             Margin="5"
                             Style="{StaticResource TextBoxGeneral}"
+                            Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                             TextChanged="logBoxEmail_TextChanged"
                             TextWrapping="NoWrap" />
                     </Grid>
@@ -123,11 +124,23 @@
                     </Grid>
                 </Border>
 
+                <!--  ERROR MESSAGE TEXT  -->
+                <TextBlock
+                    x:Name="logErrorText"
+                    Width="353"
+                    Margin="0,25,0,0"
+                    FontSize="16"
+                    Foreground="Red"
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"/>
+
                 <!--  LOGIN BUTTON  -->
                 <Button
                     Width="353"
                     Height="56"
-                    Margin="0,35,0,55"
+                    Margin="0,30,0,55"
+                    Command="{Binding LoginCommand}"
                     Content="Log In"
                     Style="{StaticResource ButtonGeneral}" />
 
@@ -141,10 +154,10 @@
                         Height="33"
                         Padding="0,0,0,5"
                         Command="{Binding NavigateToSignUpCommand}"
-                        Style="{StaticResource ButtonTransparent}"
                         Content=" Sign up "
                         FontSize="20"
-                        FontWeight="Bold" />
+                        FontWeight="Bold"
+                        Style="{StaticResource ButtonTransparent}" />
                 </StackPanel>
 
             </StackPanel>
