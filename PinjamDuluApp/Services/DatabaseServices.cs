@@ -176,6 +176,72 @@ namespace PinjamDuluApp.Services
                 return gadgets;
             }
         }
-        
+
+
+        //--------------------------- PROFILE SERVICES ---------------------------//
+        public async Task<User> GetUserProfile(Guid userId)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var sql = @"SELECT * FROM public.""User"" WHERE user_id = @userId";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("userId", userId);
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new User
+                            {
+                                UserId = reader.GetGuid(reader.GetOrdinal("user_id")),
+                                FullName = reader.GetString(reader.GetOrdinal("full_name")),
+                                Username = reader.GetString(reader.GetOrdinal("username")),
+                                Email = reader.GetString(reader.GetOrdinal("email")),
+                                BirthDate = reader.IsDBNull(reader.GetOrdinal("birth_date")) ? null : reader.GetDateTime(reader.GetOrdinal("birth_date")),
+                                Address = reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader.GetString(reader.GetOrdinal("address")),
+                                City = reader.IsDBNull(reader.GetOrdinal("city")) ? null : reader.GetString(reader.GetOrdinal("city")),
+                                Contact = reader.IsDBNull(reader.GetOrdinal("contact")) ? null : reader.GetString(reader.GetOrdinal("contact")),
+                                ProfilePicture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : (byte[])reader["profile_picture"]
+                            };
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public async Task UpdateUserProfile(User user)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var sql = @"
+            UPDATE public.""User""
+            SET full_name = @fullName,
+                username = @username,
+                birth_date = @birthDate,
+                address = @address,
+                city = @city,
+                contact = @contact,
+                profile_picture = @profilePicture
+            WHERE user_id = @userId";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("userId", user.UserId);
+                    cmd.Parameters.AddWithValue("fullName", user.FullName);
+                    cmd.Parameters.AddWithValue("username", user.Username);
+                    cmd.Parameters.AddWithValue("birthDate", (object)user.BirthDate ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("address", (object)user.Address ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("city", (object)user.City ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("contact", (object)user.Contact ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("profilePicture", (object)user.ProfilePicture ?? DBNull.Value);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
     }
 }

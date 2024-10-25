@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PinjamDuluApp.Models;
+using PinjamDuluApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,11 @@ namespace PinjamDuluApp.Views
     /// </summary>
     public partial class ProfilePage : Page
     {
-        public ProfilePage()
+        public ProfilePage(User user)
         {
+            DataContext = new ProfileViewModel(MainWindow.NavigationService, user);
             InitializeComponent();
         }
     }
 }
+
