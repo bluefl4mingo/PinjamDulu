@@ -243,5 +243,95 @@ namespace PinjamDuluApp.Services
                 }
             }
         }
+
+
+        //--------------------------- RENTAL SERVICES ---------------------------//
+        public async Task<List<RentalItem>> GetUserRentals(Guid userId)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var rentals = new List<RentalItem>();
+                var sql = @"
+            SELECT b.booking_id, b.rental_start_date, b.rental_end_date,
+                   g.gadget_id, g.title, g.description, g.category, g.brand, g.rental_price,
+                   u.full_name AS owner_name,
+                   r.review_id, r.rating, r.review_text, r.review_date,
+                   gi.image AS gadget_images
+            FROM public.""Booking"" b
+            JOIN public.""Gadget"" g ON b.gadget_id = g.gadget_id
+            JOIN public.""User"" u ON g.owner_id = u.user_id
+            LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
+            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+            WHERE b.borrower_id = @userId
+            ORDER BY b.rental_start_date DESC";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("userId", userId);
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var rentalItem = new RentalItem
+                            {
+                                BookingId = reader.GetGuid(reader.GetOrdinal("booking_id")),
+                                RentalStartDate = reader.GetDateTime(reader.GetOrdinal("rental_start_date")),
+                                RentalEndDate = reader.GetDateTime(reader.GetOrdinal("rental_end_date")),
+                                Gadget = new Gadget
+                                {
+                                    GadgetId = reader.GetGuid(reader.GetOrdinal("gadget_id")),
+                                    Title = reader.GetString(reader.GetOrdinal("title")),
+                                    Description = reader.GetString(reader.GetOrdinal("description")),
+                                    Category = reader.GetString(reader.GetOrdinal("category")),
+                                    Brand = reader.GetString(reader.GetOrdinal("brand")),
+                                    RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
+                                    Images = reader.IsDBNull(reader.GetOrdinal("gadget_images"))
+                                        ? null
+                                        : (byte[][])reader["gadget_images"]
+                                },
+                                OwnerName = reader.GetString(reader.GetOrdinal("owner_name"))
+                            };
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("review_id")))
+                            {
+                                rentalItem.Review = new Review
+                                {
+                                    ReviewId = reader.GetGuid(reader.GetOrdinal("review_id")),
+                                    Rating = reader.GetInt16(reader.GetOrdinal("rating")),
+                                    ReviewText = reader.GetString(reader.GetOrdinal("review_text")),
+                                    ReviewDate = reader.GetDateTime(reader.GetOrdinal("review_date"))
+                                };
+                            }
+
+                            rentals.Add(rentalItem);
+                        }
+                    }
+                }
+                return rentals;
+            }
+        }
+
+        public async Task AddReview(Review review)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var sql = @"
+                            INSERT INTO public.""Review"" (review_id, booking_id, rating, review_text, review_date)
+                            VALUES (@reviewId, @bookingId, @rating, @reviewText, @reviewDate)";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("reviewId", review.ReviewId);
+                    cmd.Parameters.AddWithValue("bookingId", review.BookingId);
+                    cmd.Parameters.AddWithValue("rating", review.Rating);
+                    cmd.Parameters.AddWithValue("reviewText", review.ReviewText);
+                    cmd.Parameters.AddWithValue("reviewDate", review.ReviewDate);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
     }
 }
