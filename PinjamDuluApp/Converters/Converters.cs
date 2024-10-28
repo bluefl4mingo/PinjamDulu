@@ -55,24 +55,22 @@ namespace PinjamDuluApp.Converters
         }
     }
 
-    // UNCOMMENT THIS FUNCTION BELOW WHEN YOU ARE READY TO BUILD LISTING PAGE.
+    public class BoolToGadgetListMultiConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is bool isAllVisible && values[1] is ListingViewModel viewModel)
+            {
+                return isAllVisible ? viewModel.AllGadgets : viewModel.RentedGadgets;
+            }
+            return null;
+        }
 
-    //public class BoolToGadgetListMultiConverter : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        if (values[0] is bool isAllVisible && values[1] is ListingViewModel viewModel)
-    //        {
-    //            return isAllVisible ? viewModel.AllGadgets : viewModel.RentedGadgets;
-    //        }
-    //        return null;
-    //    }
-
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class NullToVisibilityConverter : IValueConverter
     {
