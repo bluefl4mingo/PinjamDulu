@@ -67,10 +67,11 @@ namespace PinjamDuluApp.ViewModels
 
             SignOutCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(LoginPage)));
 
-            //UNCOMMENT LINE DI BAWAH KALO READY BUAT PAGE: ListingPage.xaml, RentalPage.xaml, ProfilePage.xaml, SearchPage.xaml
-            //NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
-            //NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
-            //NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
+            NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
+
+            //UNCOMMENT LINE DI BAWAH KALO READY BUAT PAGE: SearchPage.xaml
             //NavigateToSearchCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(SearchPage), user));
 
             // Load gadgets when view model is created
@@ -104,9 +105,7 @@ namespace PinjamDuluApp.ViewModels
             if (gadget != null)
             {
                 var navigationParams = new NavigationParameters(_currentUser, gadget);
-
-                // UNCOMMENT LINE DI BAWAH KALO UDAH READY NGODING PAGE: GadgetDetail.xaml
-                //_navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
+                _navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
             }
         }
     }
