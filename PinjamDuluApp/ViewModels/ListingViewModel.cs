@@ -29,11 +29,11 @@ namespace PinjamDuluApp.ViewModels
         private bool _isLoading;
         private string _errorMessage;
 
-        public ListingViewModel(NavigationService navigationService, User currentUser)
+        public ListingViewModel(NavigationService navigationService, User user)
         {
             _databaseService = new DatabaseService();
             _navigationService = navigationService;
-            _currentUser = currentUser;
+            _currentUser = user;
 
             // Initialize gadget lists to prevent null issues
             AllGadgets = new ObservableCollection<Gadget>();
@@ -51,7 +51,10 @@ namespace PinjamDuluApp.ViewModels
             SaveGadgetCommand = new RelayCommand(SaveGadget);
             SelectImagesCommand = new RelayCommand(SelectImages);
             CancelCommand = new RelayCommand(CloseAddEditWindow);
-            NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), currentUser));
+            NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), user));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
+            NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
         }
 
         public bool IsLoading
@@ -122,6 +125,9 @@ namespace PinjamDuluApp.ViewModels
         public ICommand SaveGadgetCommand { get; }
         public ICommand SelectImagesCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand NavigateToListingCommand { get; }
+        public ICommand NavigateToRentalCommand { get; }
+        public ICommand NavigateToProfileCommand { get; }
         public ICommand NavigateToHomeCommand { get; }
 
         private async void LoadGadgets()

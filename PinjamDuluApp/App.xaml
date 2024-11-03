@@ -2,6 +2,7 @@
     x:Class="PinjamDuluApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:PinjamDuluApp.Converters"
     xmlns:local="clr-namespace:PinjamDuluApp"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
@@ -9,6 +10,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ResourceStyleGeneral.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:BoolToGadgetListMultiConverter x:Key="BoolToGadgetListMultiConverter" />
         </ResourceDictionary>
     </Application.Resources>
 

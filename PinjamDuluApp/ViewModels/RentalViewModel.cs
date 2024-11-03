@@ -76,6 +76,9 @@ namespace PinjamDuluApp.ViewModels
         }
 
         public ICommand NavigateToHomeCommand { get; }
+        public ICommand NavigateToListingCommand { get; }
+        public ICommand NavigateToRentalCommand { get; }
+        public ICommand NavigateToProfileCommand { get; }
         public ICommand ShowCurrentRentalsCommand { get; }
         public ICommand ShowRentalHistoryCommand { get; }
         public ICommand CompleteRentCommand { get; }
@@ -91,6 +94,9 @@ namespace PinjamDuluApp.ViewModels
             DisplayedRentals = new ObservableCollection<RentalItem>();
 
             NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), user));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
+            NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
             ShowCurrentRentalsCommand = new RelayCommand(() => IsCurrentRentalsVisible = true);
             ShowRentalHistoryCommand = new RelayCommand(() => IsCurrentRentalsVisible = false);
             CompleteRentCommand = new RelayCommand<RentalItem>(CompleteRent);

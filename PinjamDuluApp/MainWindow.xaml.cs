@@ -12,6 +12,7 @@ namespace PinjamDuluApp
             InitializeComponent();
             NavigationService = new NavigationService(MainFrame);
             NavigationService.NavigateTo(typeof(LoginPage)); // first page that shows up when application starts 
+            //MainFrame.Content = new ListingPage();  //FOR TESTING PURPOSE OF SPECIFIC PAGE ONLY
         }
     }
 }

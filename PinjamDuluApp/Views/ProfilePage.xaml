@@ -38,7 +38,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <!--  PINJAM DULU LOGO  -->
             <TextBlock
-                Margin="50,0,50,0"
+                Margin="50,0,70,0"
                 VerticalAlignment="Center"
                 FontSize="30"
                 FontWeight="Bold"
@@ -77,7 +77,8 @@
             <Button
                 Width="165"
                 Height="56"
-                Margin="25,0,0,0"
+                Margin="40,0,0,0"
+                Command="{Binding NavigateToRentalCommand}"
                 FontWeight="SemiBold"
                 Style="{StaticResource ButtonGeneral3}">
                 <StackPanel Orientation="Horizontal">
@@ -93,6 +94,7 @@
                 Width="165"
                 Height="56"
                 Margin="25,0,0,0"
+                Command="{Binding NavigateToListingCommand}"
                 FontWeight="SemiBold"
                 Style="{StaticResource ButtonGeneral3}">
                 <StackPanel Orientation="Horizontal">
@@ -106,31 +108,90 @@
             </Button>
             <Button
                 Width="165"
-                Height="56"
-                Margin="25,0,0,0"
-                Content="Profile"
+                Height="50"
+                Margin="75,0,0,0"
+                Command="{Binding NavigateToProfileCommand}"
                 FontWeight="Bold"
-                Style="{StaticResource ButtonGeneral2}" />
+                Style="{StaticResource ButtonTransparent2}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="50"
+                        Height="50"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Source="/Images/UserCircle.png" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Text="Profile" />
+                </StackPanel>
+            </Button>
         </StackPanel>
+
+        <!--  LINE SEPARATOR  -->
+        <Rectangle
+            Grid.Row="0"
+            Width="1775"
+            Height="3"
+            VerticalAlignment="Bottom"
+            Fill="#EAEAEA" />
+
+        <!--  BACK TO HOME  -->
+        <Button
+            x:Name="btnBackHome"
+            Grid.Row="1"
+            Width="180"
+            Height="30"
+            Margin="40,30,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{Binding GoBackCommand}"
+            FontSize="20"
+            FontWeight="SemiBold"
+            Style="{StaticResource ButtonTransparent}">
+            <Grid Width="180">
+                <Rectangle
+                    Width="30"
+                    Height="3"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBackHome, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1" />
+                <TextBlock HorizontalAlignment="Right" Text="Back to Home" />
+            </Grid>
+        </Button>
 
         <!--  PROFILE CONTENT  -->
         <Border
             Grid.Row="1"
             Width="1052"
             Height="557"
+            Margin="0,0,0,50"
             BorderBrush="#B6B7BA"
             BorderThickness="3"
             CornerRadius="15">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="310" />
+                    <ColumnDefinition Width="360" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  PROFILE PICTURE  -->
                 <StackPanel Grid.Column="0">
-                    <Image Width="280" Height="280" />
-                    <Button />
+                    <Image
+                        Width="280"
+                        Height="280"
+                        Margin="0,30,0,20"
+                        Source="{Binding CurrentUser.ProfilePicture, Converter={StaticResource ByteArrayToImageConverter}}"
+                        Stretch="UniformToFill" />
+                    <!--<Button
+                        Width="280"
+                        Height="54"
+                        Command="{Binding UploadImageCommand}"
+                        Content="Pilih Foto"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Style="{StaticResource ButtonGeneral4}" />-->
                 </StackPanel>
 
                 <!--  PROFILE HEADER TEXT  -->
@@ -139,35 +200,30 @@
                     Margin="20,40,0,0"
                     FontSize="24"
                     FontWeight="Bold"
-                    Text="Ubah Biodata Diri" />
+                    Text="Informasi Data Diri" />
 
                 <!--  EDIT BUTTON  -->
                 <Button
                     Grid.Column="1"
-                    Width="40"
+                    Width="58"
                     Height="26"
-                    Margin="0,46,90,0"
+                    Margin="0,44,60,0"
                     VerticalAlignment="Top"
-                    Content="Edit"
-                    FontSize="18"
-                    Style="{StaticResource ButtonTransparent2}">
-                    <Button.Foreground>
-                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
-                            <GradientStop Offset="0.2" Color="#FFFFFF" />
-                            <GradientStop Offset="0.79" Color="#CBAEAE" />
-                            <GradientStop Offset="1" Color="#F5C8AB" />
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-                </Button>
+                    Command="{Binding EditProfileCommand}"
+                    Content="Ubah"
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    Style="{StaticResource ButtonTransparent2}" />
 
                 <!--  SIGN OUT BUTTON  -->
                 <Button
                     Grid.Column="1"
-                    Width="90"
+                    Width="105"
                     Height="28"
-                    Margin="0,40,25,0"
+                    Margin="0,42,30,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
+                    Command="{Binding SignOutCommand}"
                     FontWeight="Medium"
                     Style="{StaticResource ButtonTransparent2}">
                     <StackPanel Orientation="Horizontal">
@@ -177,7 +233,10 @@
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             Source="/Images/ExitButton.png" />
-                        <TextBlock VerticalAlignment="Center" Text="Sign Out" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Text="Sign Out" />
                     </StackPanel>
                 </Button>
 
@@ -187,31 +246,31 @@
                     Margin="20,0,0,0"
                     VerticalAlignment="Center">
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Nama Lengkap" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Username" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Tanggal Lahir" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Alamat" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Kota" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Kontak" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileAttributeText}"
                         Text="Email" />
                 </StackPanel>
@@ -219,39 +278,238 @@
                 <!--  PROFILE DATA  -->
                 <StackPanel
                     Grid.Column="1"
+                    Margin="0,0,50,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Nama Lengkap" />
+                        Text="{Binding CurrentUser.FullName}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Username" />
+                        Text="{Binding CurrentUser.Username}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Tanggal Lahir" />
+                        Text="{Binding CurrentUser.BirthDate, StringFormat=d}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Alamat" />
+                        Text="{Binding CurrentUser.Address}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Kota" />
+                        Text="{Binding CurrentUser.City}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Kontak" />
+                        Text="{Binding CurrentUser.Contact}" />
                     <TextBlock
-                        Margin="0 10"
+                        Margin="0,12"
                         Style="{StaticResource ProfileDataText}"
-                        Text="Email" />
+                        Text="{Binding CurrentUser.Email}" />
                 </StackPanel>
             </Grid>
         </Border>
+
+        <!--  Edit Dialog  -->
+        <Popup
+            AllowsTransparency="True"
+            IsOpen="{Binding IsEditDialogOpen}"
+            Placement="Center"
+            PlacementTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}">
+            <Border
+                Grid.Row="1"
+                Width="500"
+                Height="800"
+                Padding="20"
+                Background="White"
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="20">
+                <Grid>
+
+                    <!--  CANCEL BUTTON  -->
+                    <Border
+                        Margin="0,20,10,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        CornerRadius="20">
+                        <Button
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Command="{Binding CancelEditCommand}"
+                            Style="{StaticResource ButtonTransparent}">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/XCircle.png" />
+                        </Button>
+                    </Border>
+                    <StackPanel Width="330" VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="28"
+                            FontWeight="Bold"
+                            Text="Edit Profil" />
+
+                        <!--  NAMA LENGKAP  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Nama Lengkap" />
+                        <Border
+                            Width="330"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="5,5,5,5"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditFullName, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  USERNAME  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Username" />
+                        <Border
+                            Width="330"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="5,5,5,5"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditUsername, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  TANGGAL LAHIR  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Birth Date" />
+                        <Border
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <DatePicker
+                                    Height="30"
+                                    MaxWidth="325"
+                                    FontSize="16"
+                                    SelectedDate="{Binding EditBirthDate}"
+                                    Style="{StaticResource TextBoxGeneral2}" />
+                            </Grid>
+                        </Border>
+                        <!--  ALAMAT  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Alamat" />
+                        <Border
+                            Width="330"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="5,5,5,5"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditAddress, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  KOTA  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Kota" />
+                        <Border
+                            Width="330"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="5,5,5,5"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditCity, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  KONTAK  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Kontak" />
+                        <Border
+                            Width="330"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="5,5,5,5"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditContact, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <Grid Margin="0,30,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Profile Picture" />
+                            <Button
+                                Grid.Column="1"
+                                Width="160"
+                                Height="40"
+                                Command="{Binding UploadImageCommand}"
+                                Content="Upload"
+                                Style="{StaticResource ButtonGeneral2}" />
+                        </Grid>
+
+                        <!--  SAVE BUTTON  -->
+                        <Button
+                            Grid.Row="2"
+                            Width="330"
+                            Height="50"
+                            Margin="0,35,0,0"
+                            Command="{Binding SaveChangesCommand}"
+                            Content="Simpan"
+                            FontSize="16"
+                            Style="{StaticResource ButtonGeneral}" />
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Popup>
 
     </Grid>
 </Page>
