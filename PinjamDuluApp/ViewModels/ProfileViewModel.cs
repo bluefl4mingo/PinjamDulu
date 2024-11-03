@@ -11,6 +11,7 @@ using PinjamDuluApp.Helpers;
 using PinjamDuluApp.Models;
 using PinjamDuluApp.Services;
 using PinjamDuluApp.ViewModels;
+using PinjamDuluApp.Views;
 
 namespace PinjamDuluApp.ViewModels
 {
@@ -35,6 +36,9 @@ namespace PinjamDuluApp.ViewModels
         public ICommand CancelEditCommand { get; }
         public ICommand UploadImageCommand { get; }
         public ICommand GoBackCommand { get; }
+        public ICommand SignOutCommand { get; }
+        public ICommand NavigateToListingCommand { get; }
+        public ICommand NavigateToRentalCommand { get; }
 
         public ProfileViewModel(NavigationService navigationService, User user)
         {
@@ -46,6 +50,9 @@ namespace PinjamDuluApp.ViewModels
             CancelEditCommand = new RelayCommand(CancelEdit);
             UploadImageCommand = new RelayCommand(UploadImage);
             GoBackCommand = new RelayCommand(() => _navigationService.GoBack());
+            SignOutCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(LoginPage)));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
 
             LoadUserProfile(user);
         }

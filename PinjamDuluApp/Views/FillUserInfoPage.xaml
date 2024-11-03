@@ -99,20 +99,24 @@
                         BorderThickness="1"
                         CornerRadius="7">
                         <Grid Margin="7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="57*"/>
+                                <ColumnDefinition Width="281*"/>
+                            </Grid.ColumnDefinitions>
                             <TextBlock
                                 x:Name="textFullName"
-                                Margin="8,5"
+                                Margin="8,5,8,5"
                                 Padding="0,2,0,0"
                                 MouseDown="textFullName_MouseDown"
                                 Style="{StaticResource TextHint}"
-                                Text="Full name" />
+                                Text="Full name" Grid.ColumnSpan="2" />
                             <TextBox
                                 x:Name="boxFullName"
                                 MaxWidth="325"
-                                Margin="5"
+                                Margin="5,5,5,5"
                                 Style="{StaticResource TextBoxGeneral}"
                                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
-                                TextChanged="boxFullName_TextChanged" />
+                                TextChanged="boxFullName_TextChanged" Grid.ColumnSpan="2" />
                         </Grid>
                     </Border>
                     <!--  USERNAME  -->
