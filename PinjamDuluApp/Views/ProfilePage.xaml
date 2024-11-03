@@ -140,7 +140,7 @@
         <Button
             x:Name="btnBackHome"
             Grid.Row="1"
-            Width="180"
+            Width="90"
             Height="30"
             Margin="40,30,0,0"
             HorizontalAlignment="Left"
@@ -149,7 +149,7 @@
             FontSize="20"
             FontWeight="SemiBold"
             Style="{StaticResource ButtonTransparent}">
-            <Grid Width="180">
+            <Grid Width="90">
                 <Rectangle
                     Width="30"
                     Height="3"
@@ -157,7 +157,7 @@
                     Fill="{Binding ElementName=btnBackHome, Path=Foreground}"
                     RadiusX="1"
                     RadiusY="1" />
-                <TextBlock HorizontalAlignment="Right" Text="Back to Home" />
+                <TextBlock HorizontalAlignment="Right" Text="Back" />
             </Grid>
         </Button>
 
