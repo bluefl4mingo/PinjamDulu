@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PinjamDuluApp.Models;
+using PinjamDuluApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +22,9 @@ namespace PinjamDuluApp.Views
     /// </summary>
     public partial class GadgetDetail : Page
     {
-        public GadgetDetail()
+        public GadgetDetail(User user, Gadget gadget)
         {
+            DataContext = new GadgetDetailViewModel(MainWindow.NavigationService, user, gadget);
             InitializeComponent();
         }
     }

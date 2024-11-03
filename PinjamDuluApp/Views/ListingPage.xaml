@@ -139,31 +139,31 @@
         <!--  LISTING PAGE MAIN GRID  -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="590" />
+                <ColumnDefinition Width="500" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!--  LISTING PAGE DESCRIPTION  -->
-            <StackPanel Width="450" HorizontalAlignment="Center">
+            <StackPanel Width="420" HorizontalAlignment="Center">
                 <TextBlock
-                    Margin="10,70,0,15"
+                    Margin="10,30,0,15"
                     FontSize="32"
                     FontWeight="Bold"
                     Text="Listing Gadgetmu" />
                 <TextBlock
-                    Width="430"
-                    FontSize="20"
+                    Width="400"
+                    FontSize="18"
                     Text="Daftar gadget yang Anda tawarkan untuk disewakan. Bagikan teknologi Anda, bantu orang lain menikmati gadget impian mereka, dan dapatkan penghasilan tambahan dengan setiap penyewaan."
                     TextAlignment="Justify"
                     TextWrapping="Wrap" />
                 <StackPanel Margin="10,40,0,0" HorizontalAlignment="Left">
                     <Button
-                        Width="90"
-                        Height="90"
+                        Width="70"
+                        Height="70"
                         Style="{StaticResource ButtonAdd}" />
                     <TextBlock
                         Margin="0,7,0,0"
-                        FontSize="22"
+                        FontSize="18"
                         FontWeight="Bold"
                         Text="Tambah" />
                 </StackPanel>
@@ -172,7 +172,7 @@
             <!--  NAVIGATION BUTTONS  -->
             <StackPanel
                 Grid.Column="1"
-                Margin="20,70,0,0"
+                Margin="20,25,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Orientation="Horizontal">
@@ -205,8 +205,180 @@
                 </RadioButton>
             </StackPanel>
 
-            <!--  LISTING PAGE CONTENT  -->
+            <!--  LISTING GADGET CONTENT  -->
+            <ScrollViewer Grid.Column="1" Margin="10,100,10,10">
+                <ItemsControl>
+                    <ItemsControl.ItemsSource>
+                        <MultiBinding Converter="{StaticResource BoolToGadgetListMultiConverter}">
+                            <Binding Path="IsAllGadgetsVisible" />
+                            <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=Page}" />
+                        </MultiBinding>
+                    </ItemsControl.ItemsSource>
 
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="5"
+                                Padding="10"
+                                BorderBrush="Gray"
+                                BorderThickness="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Gadget Image  -->
+                                    <Image
+                                        Grid.Column="0"
+                                        Width="180"
+                                        Height="180"
+                                        Source="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}"
+                                        Stretch="Uniform" />
+
+                                    <!--  Gadget Details  -->
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Text="{Binding Title}" />
+                                        <TextBlock FontSize="14" Text="{Binding RentalPrice, StringFormat='Rp {0:N0}'}" />
+                                        <TextBlock FontSize="12" Text="{Binding GadgetRating, StringFormat='Rating: {0:F1}'}" />
+                                        <TextBlock FontSize="12" Text="{Binding TimesRented, StringFormat='Rented {0} times'}" />
+                                        <TextBlock FontSize="12" Text="{Binding Category}" />
+                                        <TextBlock FontSize="12" Text="{Binding Brand}" />
+                                        <TextBlock FontSize="12" Text="{Binding ConditionMetric, StringFormat='Condition: {0}/10'}" />
+
+                                        <!--  Additional info for rented gadgets  -->
+                                        <TextBlock
+                                            FontSize="12"
+                                            Text="{Binding CurrentRenterUsername, StringFormat='Rented by: {0}'}"
+                                            Visibility="{Binding CurrentRenterUsername, Converter={StaticResource NullToVisibilityConverter}}" />
+                                        <TextBlock
+                                            FontSize="12"
+                                            Text="{Binding CurrentRentalStart, StringFormat='Rental Start: {0:d}'}"
+                                            Visibility="{Binding CurrentRentalStart, Converter={StaticResource NullToVisibilityConverter}}" />
+                                        <TextBlock
+                                            FontSize="12"
+                                            Text="{Binding CurrentRentalEnd, StringFormat='Rental End: {0:d}'}"
+                                            Visibility="{Binding CurrentRentalEnd, Converter={StaticResource NullToVisibilityConverter}}" />
+
+                                        <Button
+                                            Width="80"
+                                            Height="25"
+                                            Margin="0,10,0,0"
+                                            HorizontalAlignment="Left"
+                                            Command="{Binding DataContext.EditGadgetCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            Content="Edit" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!--  ADD / EDIT POP UP  -->
+            <Popup
+                AllowsTransparency="True"
+                IsOpen="{Binding IsAddEditWindowVisible}"
+                Placement="Center"
+                PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                <Border
+                    Padding="20"
+                    Background="White"
+                    BorderBrush="Gray"
+                    BorderThickness="1">
+                    <StackPanel Width="400">
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Text="{Binding WindowTitle}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Title" />
+                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Title}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Description" />
+                        <TextBox
+                            Height="60"
+                            Margin="0,5"
+                            Text="{Binding SelectedGadget.Description}"
+                            TextWrapping="Wrap" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Category" />
+                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Category}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Brand" />
+                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Brand}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Condition" />
+                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.ConditionMetric}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Rental Price" />
+                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.RentalPrice}" />
+
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text="Availability Date" />
+                        <DatePicker Margin="0,5" SelectedDate="{Binding SelectedGadget.AvailabilityDate}" />
+
+                        <Button
+                            Margin="0,10"
+                            Command="{Binding SelectImagesCommand}"
+                            Content="Select Images (4 Images please)" />
+                        <TextBlock
+                            Margin="0,5"
+                            Foreground="Red"
+                            Text="{Binding ErrorMessage}"
+                            TextWrapping="Wrap" />
+
+                        <StackPanel
+                            Margin="0,20,0,0"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                Width="80"
+                                Height="25"
+                                Margin="0,0,10,0"
+                                Command="{Binding SaveGadgetCommand}"
+                                Content="Save" />
+                            <Button
+                                Width="80"
+                                Height="25"
+                                Command="{Binding CancelCommand}"
+                                Content="Cancel" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Popup>
 
         </Grid>
 
