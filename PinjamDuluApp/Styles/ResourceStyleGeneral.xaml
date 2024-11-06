@@ -129,10 +129,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="7">
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="7">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                 </ControlTemplate>
@@ -200,7 +200,7 @@
                             <Setter TargetName="circle" Property="BorderBrush" Value="#1D1D21" />
                         </Trigger>
 
-                        <Trigger Property="IsPressed" Value="True" >
+                        <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="circle" Property="Background" Value="#B6B7BA" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -286,6 +286,33 @@
         </Style.Triggers>
     </Style>
 
+    <!--  HOME ITEM BUTTON STYLE  -->
+    <Style x:Key="ButtonHomeItem" TargetType="Button">
+        <Setter Property="Foreground" Value="#1D1D21" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#A77575" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Foreground" Value="#747680" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--  TEXT HINT / PLACEHOLER GENERAL STYLE  -->
     <Style x:Key="TextHint" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
@@ -299,7 +326,7 @@
         </Style.Triggers>
     </Style>
 
-    <!--  TEXTBOX GENERAL STYLE (LOGIN & SIGNUP PAGE) -->
+    <!--  TEXTBOX GENERAL STYLE (LOGIN & SIGNUP PAGE)  -->
     <Style x:Key="TextBoxGeneral" TargetType="Control">
         <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
         <Setter Property="FontSize" Value="20" />
@@ -308,7 +335,7 @@
         <Setter Property="BorderThickness" Value="0" />
     </Style>
 
-    <!--  TEXTBOX GENERAL STYLE 2 (PROFILE PAGE) -->
+    <!--  TEXTBOX GENERAL STYLE 2 (PROFILE PAGE)  -->
     <Style x:Key="TextBoxGeneral2" TargetType="Control">
         <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
         <Setter Property="FontSize" Value="16" />
@@ -322,10 +349,9 @@
 
     <!--  RADIO BUTTON STYLE  -->
     <Style x:Key="RadioButton" TargetType="RadioButton">
-
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="#1D1D21" />
+        <Setter Property="Foreground" Value="#393A41" />
         <Setter Property="Cursor" Value="Hand" />
 
         <Setter Property="Template">
@@ -351,14 +377,47 @@
                             <Setter TargetName="border" Property="Background" Value="{StaticResource Gradient}" />
                             <Setter Property="Foreground" Value="#FFFFFF" />
                         </Trigger>
-
-                        <Trigger Property="IsPressed" Value="True" />
                     </ControlTemplate.Triggers>
 
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
 
+    <!--  GRADIENT BUTTON STYLE  -->
+    <Style x:Key="GradientButton" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+
+                    <Border
+                    x:Name="border"
+                    Background="{StaticResource Gradient}"
+                    BorderThickness="0"
+                    CornerRadius="7">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#D9D9D9" />
+                            <Setter Property="Foreground" Value="#1D1D21" />
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True" >
+                            <Setter TargetName="border" Property="Background" Value="#EAEAEA" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 

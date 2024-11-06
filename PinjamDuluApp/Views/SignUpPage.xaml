@@ -156,17 +156,17 @@
                     FontSize="16"
                     Foreground="Red"
                     Text="{Binding ErrorMessage}"
-                    TextWrapping="Wrap"
-                    TextAlignment="Center"/>
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
 
                 <!--  SIGNUP BUTTON  -->
                 <Button
                     Width="353"
                     Height="56"
                     Margin="0,30,0,55"
+                    Command="{Binding SignUpCommand}"
                     Content="Sign Up"
-                    Style="{StaticResource ButtonGeneral}"
-                    Command="{Binding SignUpCommand}"/>
+                    Style="{StaticResource ButtonGeneral}" />
 
                 <!--  SUDAH PUNYA AKUN  -->
                 <StackPanel

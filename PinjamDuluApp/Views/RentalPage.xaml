@@ -37,20 +37,26 @@
         <!--  HEADER NAV BAR  -->
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <!--  PINJAM DULU LOGO  -->
-            <TextBlock
+            <Button
+                Width="180"
+                Height="40"
                 Margin="50,0,70,0"
-                VerticalAlignment="Center"
-                FontSize="30"
-                FontWeight="Bold"
-                Text="PinjamDulu">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
-                        <GradientStop Offset="0.2" Color="#FFFFFF" />
-                        <GradientStop Offset="0.79" Color="#CBAEAE" />
-                        <GradientStop Offset="1" Color="#F5C8AB" />
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
+                Style="{StaticResource ButtonTransparent2}"
+                Command="{Binding NavigateToHomeCommand}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Text="PinjamDulu">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                            <GradientStop Offset="0.2" Color="#FFFFFF" />
+                            <GradientStop Offset="0.79" Color="#CBAEAE" />
+                            <GradientStop Offset="1" Color="#F5C8AB" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Button>
 
             <!--  SEARCH BAR  -->
             <Border
@@ -262,7 +268,7 @@
                 AllowsTransparency="True"
                 IsOpen="{Binding IsReviewPopupOpen}"
                 Placement="Center"
-                PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Page}}">
                 <Border
                     Padding="20"
                     Background="White"

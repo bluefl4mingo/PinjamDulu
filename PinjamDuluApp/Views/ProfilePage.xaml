@@ -37,20 +37,26 @@
         <!--  HEADER NAV BAR  -->
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <!--  PINJAM DULU LOGO  -->
-            <TextBlock
+            <Button
+                Width="180"
+                Height="40"
                 Margin="50,0,70,0"
-                VerticalAlignment="Center"
-                FontSize="30"
-                FontWeight="Bold"
-                Text="PinjamDulu">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
-                        <GradientStop Offset="0.2" Color="#FFFFFF" />
-                        <GradientStop Offset="0.79" Color="#CBAEAE" />
-                        <GradientStop Offset="1" Color="#F5C8AB" />
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
+                Command="{Binding NavigateToHomeCommand}"
+                Style="{StaticResource ButtonTransparent2}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Text="PinjamDulu">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                            <GradientStop Offset="0.2" Color="#FFFFFF" />
+                            <GradientStop Offset="0.79" Color="#CBAEAE" />
+                            <GradientStop Offset="1" Color="#F5C8AB" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Button>
 
             <!--  SEARCH BAR  -->
             <Border
@@ -136,7 +142,7 @@
             VerticalAlignment="Bottom"
             Fill="#EAEAEA" />
 
-        <!--  BACK TO HOME  -->
+        <!--  BACK BUTTON  -->
         <Button
             x:Name="btnBackHome"
             Grid.Row="1"
@@ -165,7 +171,7 @@
         <Border
             Grid.Row="1"
             Width="1052"
-            Height="557"
+            Height="507"
             Margin="0,0,0,50"
             BorderBrush="#B6B7BA"
             BorderThickness="3"
@@ -181,7 +187,7 @@
                     <Image
                         Width="280"
                         Height="280"
-                        Margin="0,30,0,20"
+                        Margin="0,40,0,0"
                         Source="{Binding CurrentUser.ProfilePicture, Converter={StaticResource ByteArrayToImageConverter}}"
                         Stretch="UniformToFill" />
                     <!--<Button
@@ -243,7 +249,7 @@
                 <!--  PROFILE ATTRIBUTES  -->
                 <StackPanel
                     Grid.Column="1"
-                    Margin="20,0,0,0"
+                    Margin="20,60,0,0"
                     VerticalAlignment="Center">
                     <TextBlock
                         Margin="0,12"
@@ -278,7 +284,7 @@
                 <!--  PROFILE DATA  -->
                 <StackPanel
                     Grid.Column="1"
-                    Margin="0,0,50,0"
+                    Margin="0,60,50,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
                     <TextBlock
@@ -510,6 +516,14 @@
                 </Grid>
             </Border>
         </Popup>
+
+        <!--  EDIT POPUP OVERLAY  -->
+        <!--<Grid
+            x:Name="Overlay"
+            Grid.RowSpan="2"
+            Background="Black"
+            Opacity="0.5"
+            Visibility="{Binding IsOverlayVisible}" />-->
 
     </Grid>
 </Page>
