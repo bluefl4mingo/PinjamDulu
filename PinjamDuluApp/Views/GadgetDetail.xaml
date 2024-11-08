@@ -10,6 +10,25 @@
     d:DesignWidth="1920"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+
+        <Style x:Key="AttributeText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1D1D21" />
+        </Style>
+
+        <Style x:Key="DataText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="#747680" />
+        </Style>
+    </Page.Resources>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
@@ -19,20 +38,27 @@
         <!--  HEADER NAV BAR  -->
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <!--  PINJAM DULU LOGO  -->
-            <TextBlock
+            <Button
+                Width="180"
+                Height="40"
                 Margin="50,0,70,0"
-                VerticalAlignment="Center"
-                FontSize="30"
-                FontWeight="Bold"
-                Text="PinjamDulu">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
-                        <GradientStop Offset="0.2" Color="#FFFFFF" />
-                        <GradientStop Offset="0.79" Color="#CBAEAE" />
-                        <GradientStop Offset="1" Color="#F5C8AB" />
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
+                Command="{Binding NavigateToHomeCommand}"
+                Style="{StaticResource ButtonTransparent2}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Text="PinjamDulu">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                            <GradientStop Offset="0.2" Color="#FFFFFF" />
+                            <GradientStop Offset="0.79" Color="#CBAEAE" />
+                            <GradientStop Offset="1" Color="#F5C8AB" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Button>
+
 
             <!--  SEARCH BAR  -->
             <Border
@@ -120,117 +146,355 @@
 
         <!--  GADGET DETAIL  -->
         <ScrollViewer Grid.Row="1">
-            <StackPanel Margin="20">
-                <!--  Gadget Info Section  -->
-                <StackPanel>
-                    <Button
-                        Width="100"
-                        Height="30"
-                        Margin="0,0,0,20"
-                        HorizontalAlignment="left"
-                        Command="{Binding NavigateToHomeCommand}"
-                        Content="Back to Home" />
-                    <TextBlock
-                        FontSize="20"
-                        FontWeight="Bold"
-                        Text="Gadget Info" />
-                    <WrapPanel>
+            <Grid Width="1060" Margin="0,30,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="410" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  GADGET IMAGES  -->
+                    <WrapPanel Grid.Column="0" Width="390">
                         <Image
-                            Width="200"
-                            Height="200"
-                            Margin="5"
+                            Width="380"
+                            Height="380"
+                            Margin="0"
                             Source="{Binding Gadget.Images[0], Converter={StaticResource ByteArrayToImageConverter}}" />
                         <Image
-                            Width="200"
-                            Height="200"
-                            Margin="5"
+                            Width="120"
+                            Height="120"
+                            Margin="0,10,0,0"
                             Source="{Binding Gadget.Images[1], Converter={StaticResource ByteArrayToImageConverter}}" />
                         <Image
-                            Width="200"
-                            Height="200"
-                            Margin="5"
+                            Width="120"
+                            Height="120"
+                            Margin="10,10,0,0"
                             Source="{Binding Gadget.Images[2], Converter={StaticResource ByteArrayToImageConverter}}" />
+                        <Image
+                            Width="120"
+                            Height="120"
+                            Margin="10,10,0,0"
+                            Source="{Binding Gadget.Images[3], Converter={StaticResource ByteArrayToImageConverter}}" />
                     </WrapPanel>
+
+                    <!--  Gadget Info Section  -->
+                    <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                        <TextBlock
+                            FontSize="30"
+                            FontWeight="Medium"
+                            Text="{Binding Gadget.Title}"
+                            TextWrapping="WrapWithOverflow" />
+                        <StackPanel
+                            Grid.Row="4"
+                            Margin="0,10,0,20"
+                            Orientation="Horizontal">
+                            <Image
+                                Height="25"
+                                Margin="0,0,7,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Source="/Images/StarIcon.png" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="#393A41"
+                                Text="{Binding Gadget.GadgetRating, StringFormat='{}{0:F1}'}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="#393A41"
+                                Text=" | " />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="#393A41"
+                                Text="{Binding Gadget.TimesRented, StringFormat='{}{0}x dirental'}" />
+                        </StackPanel>
+                        <TextBlock
+                            FontSize="34"
+                            FontWeight="Bold"
+                            Text="{Binding Gadget.RentalPrice, StringFormat='Rp{0:#,#}/day'}" />
+                        <!--  LINE SEPARATOR GADGET DETAIL  -->
+                        <Rectangle
+                            Width="Auto"
+                            Height="3"
+                            Margin="0,20,0,20"
+                            Fill="#EAEAEA" />
+                        <Grid>
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Pemilik" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Kota" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Kategori" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Brand" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Kondisi" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource AttributeText}"
+                                    Text="Waktu Tersedia" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="230,0,0,0"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="Pemilik" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="{Binding Gadget.OwnerCity}" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="{Binding Gadget.Category}" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="{Binding Gadget.Brand}" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="{Binding Gadget.ConditionMetric, StringFormat='{}{0}/10'}" />
+                                <TextBlock
+                                    Margin="0,10"
+                                    Style="{StaticResource DataText}"
+                                    Text="{Binding Gadget.AvailabilityDate, StringFormat='{}{0:d MMMM yyyy}'}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <!--  LINE SEPARATOR RENT NOW  -->
+                <Rectangle
+                    Grid.Row="1"
+                    Width="Auto"
+                    Height="3"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Top"
+                    Fill="#EAEAEA" />
+
+                <!--  RENTING SECTION  -->
+                <Grid
+                    Grid.Row="1"
+                    Width="Auto"
+                    Margin="0,30,0,0">
+                    <Grid Height="140">
+                        <TextBlock
+                            FontSize="18"
+                            FontWeight="Regular"
+                            Text="Rental hingga tanggal" />
+                        <Border
+                            Width="400"
+                            Height="60"
+                            HorizontalAlignment="Left"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="7">
+                            <Grid Margin="7">
+                                <TextBlock
+                                    x:Name="textBirth"
+                                    Margin="8,5"
+                                    Padding="0,2,0,0"
+                                    Style="{StaticResource TextHint}"
+                                    Text="Select a date"
+                                    Visibility="Hidden" />
+                                <DatePicker
+                                    MaxWidth="390"
+                                    Margin="5"
+                                    VerticalAlignment="Center"
+                                    FontSize="18"
+                                    SelectedDate="{Binding RentEndDate}"
+                                    Style="{StaticResource TextBoxGeneral}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
                     <TextBlock
+                        Margin="80,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        Text="Total Harga:   " />
+                    <TextBlock
+                        Width="220"
+                        Margin="440,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource Gradient}"
+                        Text="{Binding TotalPrice, StringFormat='{}Rp{0:#,#}'}"
+                        TextAlignment="Left" />
+                    <Button
+                        x:Name="btnRent"
+                        Width="170"
+                        Height="55"
+                        Margin="80,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding RentCommand}"
                         FontSize="18"
                         FontWeight="Bold"
-                        Text="{Binding Gadget.Title}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.GadgetRating, StringFormat='Rating: {0:F1}'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.TimesRented, StringFormat='Times Rented: {0}'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.RentalPrice, StringFormat='Price: ${0:F2}/day'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.OwnerCity, StringFormat='Owner City: {0}'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.Category, StringFormat='Category: {0}'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.Brand, StringFormat='Brand: {0}'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.ConditionMetric, StringFormat='Condition: {0}/10'}" />
-                    <TextBlock FontSize="14" Text="{Binding Gadget.AvailabilityDate, StringFormat='Available from: {0:d}'}" />
-                </StackPanel>
+                        Style="{StaticResource GradientButton}">
+                        <Grid Width="110">
+                            <TextBlock HorizontalAlignment="Left" Text="Rental" />
+                            <Rectangle
+                                Width="30"
+                                Height="3"
+                                HorizontalAlignment="Right"
+                                Fill="{Binding ElementName=btnRent, Path=Foreground}"
+                                RadiusX="1"
+                                RadiusY="1" />
+                            <Rectangle
+                                Width="12"
+                                Height="3"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Right"
+                                Fill="{Binding ElementName=btnRent, Path=Foreground}"
+                                RadiusX="1"
+                                RadiusY="1">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                            <Rectangle
+                                Width="12"
+                                Height="3"
+                                Margin="0,8,0,0"
+                                HorizontalAlignment="Right"
+                                Fill="{Binding ElementName=btnRent, Path=Foreground}"
+                                RadiusX="1"
+                                RadiusY="1">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="-45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                        </Grid>
+                    </Button>
+                </Grid>
 
-                <!--  Renting Section  -->
-                <StackPanel Margin="0,20,0,0">
-                    <TextBlock
-                        FontSize="20"
-                        FontWeight="Bold"
-                        Text="Rent this Gadget" />
-                    <DatePicker SelectedDate="{Binding RentEndDate}" />
-                    <!--<DatePicker SelectedDate="{Binding RentEndDate}" DisplayDateStart="{Binding TomorrowDate}"/>-->
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Text="{Binding TotalPrice, StringFormat='Total Price: ${0:F2}'}" />
-                    <Button
-                        Margin="0,10,0,0"
-                        Padding="10,5"
-                        Command="{Binding RentCommand}"
-                        Content="Rent Now" />
-                </StackPanel>
+                <!--  LINE SEPARATOR DESCRIPTION  -->
+                <Rectangle
+                    Grid.Row="2"
+                    Width="Auto"
+                    Height="3"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Top"
+                    Fill="#EAEAEA" />
 
                 <!--  Description Section  -->
-                <StackPanel Margin="0,20,0,0">
+                <StackPanel Grid.Row="2" Margin="0,20,0,0">
                     <TextBlock
+                        Margin="0,20,0,20"
                         FontSize="20"
-                        FontWeight="Bold"
-                        Text="Description" />
-                    <TextBlock Text="{Binding Gadget.Description}" TextWrapping="Wrap" />
+                        FontWeight="SemiBold"
+                        Text="Deskripsi" />
+                    <TextBlock
+                        FontSize="14"
+                        Text="{Binding Gadget.Description}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
 
+                <!--  LINE SEPARATOR DESCRIPTION  -->
+                <Rectangle
+                    Grid.Row="3"
+                    Width="Auto"
+                    Height="3"
+                    Margin="0,30,0,0"
+                    VerticalAlignment="Top"
+                    Fill="#EAEAEA" />
+
                 <!--  Review Section  -->
-                <StackPanel Margin="0,20,0,0">
+                <StackPanel Grid.Row="3" Margin="0,50,0,0">
                     <TextBlock
                         FontSize="20"
-                        FontWeight="Bold"
-                        Text="Reviews" />
-                    <ItemsControl ItemsSource="{Binding Reviews}">
+                        FontWeight="SemiBold"
+                        Text="Ulasan" />
+                    <ItemsControl Margin="0,20,0,0" ItemsSource="{Binding Reviews}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border
-                                    Margin="0,5"
-                                    Padding="10"
-                                    BorderBrush="LightGray"
-                                    BorderThickness="1">
-                                    <StackPanel>
-                                        <DockPanel>
+                                <Grid Width="Auto" Height="Auto">
+                                    <StackPanel Margin="0,0,0,40">
+                                        <!--  PROFILE AND USERNAME  -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border
+                                                Width="60"
+                                                Height="60"
+                                                CornerRadius="35">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="{Binding ReviewerProfilePicture, Converter={StaticResource ByteArrayToImageConverter}}" Stretch="UniformToFill" />
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock
+                                                Margin="18,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="20"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding ReviewerName}" />
+                                        </StackPanel>
+
+                                        <!--  RATING AND DATE  -->
+                                        <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                                             <Image
-                                                Width="50"
-                                                Height="50"
-                                                DockPanel.Dock="Left"
-                                                Source="{Binding ReviewerProfilePicture, Converter={StaticResource ByteArrayToImageConverter}}" />
-                                            <StackPanel Margin="10,0,0,0">
-                                                <TextBlock FontWeight="Bold" Text="{Binding ReviewerName}" />
-                                                <TextBlock Foreground="Orange" Text="{Binding Rating, StringFormat='Rating: {0:F1}/5'}" />
-                                                <TextBlock Foreground="Gray" Text="{Binding ReviewDate, StringFormat='Date: {0:d}'}" />
-                                            </StackPanel>
-                                        </DockPanel>
+                                                Height="17"
+                                                Margin="0,0,5,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Source="/Images/StarIcon.png" />
+                                            <TextBlock
+                                                Margin="0,0,15,0"
+                                                FontSize="16"
+                                                Foreground="Orange"
+                                                Text="{Binding Rating, StringFormat='{}{0:F1}/5'}" />
+                                            <TextBlock
+                                                FontSize="16"
+                                                Foreground="Gray"
+                                                Text="{Binding ReviewDate, StringFormat='{}{0:d}'}" />
+                                        </StackPanel>
+
+                                        <!--  REVIEW TEXT  -->
                                         <TextBlock
-                                            Margin="0,10,0,0"
+                                            Margin="0,15,0,0"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="14"
                                             Text="{Binding ReviewText}"
                                             TextWrapping="Wrap" />
                                     </StackPanel>
-                                </Border>
+                                </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-            </StackPanel>
+
+            </Grid>
         </ScrollViewer>
+
     </Grid>
 </Page>

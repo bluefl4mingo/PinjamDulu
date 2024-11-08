@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using PinjamDuluApp.Helpers;
 using PinjamDuluApp.Models;
@@ -16,8 +17,14 @@ namespace PinjamDuluApp.ViewModels
 
         public ObservableCollection<RentalItem> AllRentals { get; set; }
         public ObservableCollection<RentalItem> DisplayedRentals { get; set; }
-
+        private RentalItem _selectedRental;
+        private int _selectedRating;
+        private Visibility _isPopupOverlayVisible = Visibility.Collapsed;
+        private Visibility _isOverlayVisible = Visibility.Collapsed;
+        private string _reviewText;
+        //private bool _isReviewPopupOpen;
         private bool _isCurrentRentalsVisible = true;
+
         public bool IsCurrentRentalsVisible
         {
             get => _isCurrentRentalsVisible;
@@ -29,18 +36,32 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
-        private bool _isReviewPopupOpen;
-        public bool IsReviewPopupOpen
+        //public bool IsReviewPopupOpen
+        //{
+        //    get => _isReviewPopupOpen;
+        //    set
+        //    {
+        //        _isReviewPopupOpen = value;
+        //        OnPropertyChanged(nameof(IsReviewPopupOpen));
+        //    }
+        //}
+
+        public Visibility IsOverlayVisible
         {
-            get => _isReviewPopupOpen;
+            get => _isOverlayVisible;
             set
             {
-                _isReviewPopupOpen = value;
-                OnPropertyChanged(nameof(IsReviewPopupOpen));
+                _isOverlayVisible = value;
+                OnPropertyChanged(nameof(IsOverlayVisible));
             }
         }
 
-        private RentalItem _selectedRental;
+        public Visibility IsPopupOverlayVisible
+        {
+            get => _isPopupOverlayVisible;
+            set => SetProperty(ref _isPopupOverlayVisible, value);
+        }
+
         public RentalItem SelectedRental
         {
             get => _selectedRental;
@@ -53,7 +74,7 @@ namespace PinjamDuluApp.ViewModels
 
         public ObservableCollection<int> RatingOptions { get; } = new ObservableCollection<int> { 1, 2, 3, 4, 5 };
 
-        private int _selectedRating;
+        
         public int SelectedRating
         {
             get => _selectedRating;
@@ -63,8 +84,7 @@ namespace PinjamDuluApp.ViewModels
                 OnPropertyChanged(nameof(SelectedRating));
             }
         }
-
-        private string _reviewText;
+        
         public string ReviewText
         {
             get => _reviewText;
@@ -101,9 +121,15 @@ namespace PinjamDuluApp.ViewModels
             ShowRentalHistoryCommand = new RelayCommand(() => IsCurrentRentalsVisible = false);
             CompleteRentCommand = new RelayCommand<RentalItem>(CompleteRent);
             SubmitReviewCommand = new RelayCommand(SubmitReview);
-            CancelReviewCommand = new RelayCommand(() => IsReviewPopupOpen = false);
+            CancelReviewCommand = new RelayCommand(CancelReview);
 
             LoadRentals(user);
+        }
+
+        private void CancelReview()
+        {           
+            IsPopupOverlayVisible = Visibility.Collapsed;
+            IsOverlayVisible = Visibility.Collapsed;
         }
 
         private async void LoadRentals(User user)
@@ -135,7 +161,9 @@ namespace PinjamDuluApp.ViewModels
         private void CompleteRent(RentalItem rental)
         {
             SelectedRental = rental;
-            IsReviewPopupOpen = true;
+            //IsReviewPopupOpen = true;
+            IsOverlayVisible = Visibility.Visible;
+            IsPopupOverlayVisible = Visibility.Visible;
         }
 
         private async void SubmitReview()
@@ -154,7 +182,9 @@ namespace PinjamDuluApp.ViewModels
                 await _databaseService.AddReview(review);
                 SelectedRental.Review = review;
 
-                IsReviewPopupOpen = false;
+                //IsReviewPopupOpen = false;
+                IsPopupOverlayVisible = Visibility.Collapsed;
+                IsOverlayVisible = Visibility.Collapsed;
                 UpdateDisplayedRentals();
             }
         }

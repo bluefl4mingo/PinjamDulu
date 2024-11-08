@@ -22,8 +22,11 @@
     <None Remove="Images\DecorImage.png" />
     <None Remove="Images\ExitButton.png" />
     <None Remove="Images\ListIcon.png" />
+    <None Remove="Images\LocIcon.png" />
     <None Remove="Images\SearchIcon.png" />
     <None Remove="Images\ShopCart.png" />
+    <None Remove="Images\Star8.png" />
+    <None Remove="Images\StarIcon.png" />
     <None Remove="Images\UserCircle.png" />
     <None Remove="Images\XCircle.png" />
   </ItemGroup>
@@ -49,8 +52,11 @@
     <Resource Include="Images\DecorImage.png" />
     <Resource Include="Images\ExitButton.png" />
     <Resource Include="Images\ListIcon.png" />
+    <Resource Include="Images\LocIcon.png" />
     <Resource Include="Images\SearchIcon.png" />
     <Resource Include="Images\ShopCart.png" />
+    <Resource Include="Images\Star8.png" />
+    <Resource Include="Images\StarIcon.png" />
     <Resource Include="Images\UserCircle.png" />
     <Resource Include="Images\XCircle.png" />
   </ItemGroup>

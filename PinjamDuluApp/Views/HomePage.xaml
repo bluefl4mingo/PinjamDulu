@@ -124,62 +124,166 @@
             VerticalAlignment="Bottom"
             Fill="#EAEAEA" />
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Gadgets}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button
-                            Margin="10"
-                            Command="{Binding DataContext.GadgetSelectedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                            CommandParameter="{Binding}">
-                            <Grid Width="200">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="200" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+        <ScrollViewer
+            Grid.Row="1"
+            Background="{StaticResource Gradient}"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                                <Image
-                                    Grid.Row="0"
-                                    Source="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}"
-                                    Stretch="UniformToFill" />
+                <!--  HOME SLOGAN  -->
+                <Grid Grid.Row="0" Background="White" />
+                <TextBlock
+                    Grid.Row="0"
+                    Width="730"
+                    Margin="387,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    FontWeight="Regular"
+                    Text="Pinjam gadget impianmu dengan mudah, cepat, dan aman. Nikmati teknologi terbaru tanpa harus membeli."
+                    TextWrapping="WrapWithOverflow" />
+                <Image
+                    Grid.Row="0"
+                    Width="46"
+                    Margin="0,0,350,0"
+                    HorizontalAlignment="Right"
+                    Source="/Images/Star8.png" />
 
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Margin="5"
-                                    FontWeight="Bold"
-                                    Text="{Binding Title}" />
+                <!--  REKOMENDASI  -->
+                <TextBlock
+                    Grid.Row="1"
+                    Width="920"
+                    Margin="387,30,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Text="Rekomendasi" />
 
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Margin="5"
-                                    Text="{Binding RentalPrice, StringFormat='Rp. {0:N0}/day'}" />
+                <ItemsControl
+                    Grid.Row="1"
+                    Width="1160"
+                    Margin="0,100,0,0"
+                    HorizontalAlignment="Center"
+                    ItemsSource="{Binding Gadgets}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                                Margin="15"
+                                Command="{Binding DataContext.GadgetSelectedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource ButtonHomeItem}">
+                                <Border Background="White" CornerRadius="10">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="20"
+                                            Direction="270"
+                                            Opacity="0.2"
+                                            ShadowDepth="5"
+                                            Color="Black" />
+                                    </Border.Effect>
 
-                                <StackPanel
-                                    Grid.Row="3"
-                                    Margin="5"
-                                    Orientation="Horizontal">
-                                    <TextBlock Text="{Binding OwnerCity}" />
-                                    <TextBlock Text=" | " />
-                                    <TextBlock Text="{Binding GadgetRating, StringFormat='{}{0:F1}★'}" />
-                                </StackPanel>
+                                    <Grid Width="200" Height="365" Background="Transparent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                                <TextBlock
-                                    Grid.Row="4"
-                                    Margin="5"
-                                    Text="{Binding TimesRented, StringFormat='Rented {0} times'}" />
-                            </Grid>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                        <Border
+                                            Grid.Row="0"
+                                            Width="200"
+                                            Height="200"
+                                            CornerRadius="10 10 0 0">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}" Stretch="UniformToFill" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            MaxWidth="190"
+                                            MaxHeight="50"
+                                            Margin="10,10,0,0"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="16"
+                                            FontWeight="Medium"
+                                            Text="{Binding Title}"
+                                            TextWrapping="WrapWithOverflow" />
+
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Margin="10,5,0,0"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Text="{Binding RentalPrice, StringFormat='Rp. {0:N0}/day'}" />
+
+                                        <StackPanel
+                                            Grid.Row="3"
+                                            Margin="13,10,0,0"
+                                            Orientation="Horizontal">
+                                            <Image
+                                                Height="20"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                Source="/Images/LocIcon.png" />
+
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding OwnerCity}" />
+                                        </StackPanel>
+
+
+
+                                        <StackPanel
+                                            Grid.Row="4"
+                                            Margin="10,8,0,10"
+                                            Orientation="Horizontal">
+                                            <Image
+                                                Height="20"
+                                                Margin="0,0,5,5"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Source="/Images/StarIcon.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding GadgetRating, StringFormat='{}{0:F1}'}" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text=" | " />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding TimesRented, StringFormat='Rented {0} times'}" />
+                                        </StackPanel>
+
+                                    </Grid>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </ScrollViewer>
 
 

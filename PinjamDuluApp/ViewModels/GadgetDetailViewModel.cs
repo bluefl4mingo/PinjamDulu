@@ -55,6 +55,9 @@ namespace PinjamDuluApp.ViewModels
         public ObservableCollection<Review> Reviews { get; private set; }
         public ICommand RentCommand { get; }
         public ICommand NavigateToHomeCommand { get; }
+        public ICommand NavigateToListingCommand { get; }
+        public ICommand NavigateToRentalCommand { get; }
+        public ICommand NavigateToProfileCommand { get; }
 
         public GadgetDetailViewModel(NavigationService navigationService, User user, Gadget gadget)
         {
@@ -69,6 +72,9 @@ namespace PinjamDuluApp.ViewModels
             Reviews = new ObservableCollection<Review>();
             RentCommand = new RelayCommand(() => InitiateRental(user));
             NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), user));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
+            NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
 
             // Load additional details (reviews) asynchronously
             LoadReviewsAsync(gadget.GadgetId);
