@@ -9,6 +9,7 @@ using PinjamDuluApp.Helpers;
 using PinjamDuluApp.Models;
 using PinjamDuluApp.Services;
 using PinjamDuluApp.ViewModels;
+using System.Windows;
 
 namespace PinjamDuluApp.ViewModels
 {
@@ -20,7 +21,9 @@ namespace PinjamDuluApp.ViewModels
         private ObservableCollection<Gadget> _allGadgets;
         private ObservableCollection<Gadget> _rentedGadgets;
         private bool _isAllGadgetsVisible = true;
-        private bool _isAddEditWindowVisible;
+        //private bool _isAddEditWindowVisible;
+        private Visibility _isPopupOverlayVisible = Visibility.Collapsed;
+        private Visibility _isOverlayVisible = Visibility.Collapsed;
         private Gadget _selectedGadget;
         private bool _isEditing;
         private string _windowTitle;
@@ -94,10 +97,26 @@ namespace PinjamDuluApp.ViewModels
             set => SetProperty(ref _isAllGadgetsVisible, value);
         }
 
-        public bool IsAddEditWindowVisible
+        //public bool IsAddEditWindowVisible
+        //{
+        //    get => _isAddEditWindowVisible;
+        //    set => SetProperty(ref _isAddEditWindowVisible, value);
+        //}
+
+        public Visibility IsOverlayVisible
         {
-            get => _isAddEditWindowVisible;
-            set => SetProperty(ref _isAddEditWindowVisible, value);
+            get => _isOverlayVisible;
+            set
+            {
+                _isOverlayVisible = value;
+                OnPropertyChanged(nameof(IsOverlayVisible));
+            }
+        }
+
+        public Visibility IsPopupOverlayVisible
+        {
+            get => _isPopupOverlayVisible;
+            set => SetProperty(ref _isPopupOverlayVisible, value);
         }
 
         public Gadget SelectedGadget
@@ -177,14 +196,16 @@ namespace PinjamDuluApp.ViewModels
         private void ShowAddWindow()
         {
             _isEditing = false;
-            WindowTitle = "Add New Gadget";
+            WindowTitle = "Tambah Gadget";
             SelectedGadget = new Gadget
             {
                 OwnerId = _currentUser.UserId,
                 Availability = true
             };
             _selectedImages = null;
-            IsAddEditWindowVisible = true;
+            //IsAddEditWindowVisible = true;
+            IsOverlayVisible = Visibility.Visible;
+            IsPopupOverlayVisible = Visibility.Visible;
         }
 
         private void EditGadget(Gadget gadget)
@@ -205,12 +226,28 @@ namespace PinjamDuluApp.ViewModels
                 Images = gadget.Images
             };
             _selectedImages = gadget.Images;
-            IsAddEditWindowVisible = true;
+            //IsAddEditWindowVisible = true;
+            IsOverlayVisible = Visibility.Visible;
+            IsPopupOverlayVisible = Visibility.Visible;
         }
 
         private async void SaveGadget()
         {
             if (SelectedGadget == null) return;
+
+            // Validate condition metric
+            if (SelectedGadget.ConditionMetric < 1 || SelectedGadget.ConditionMetric > 10)
+            {
+                ErrorMessage = "Kondisi gadget harus berupa bilangan bulat antara 1 hingga 10!";
+                return;
+            }
+
+            // Validate rental price
+            if (SelectedGadget.RentalPrice < 0)
+            {
+                ErrorMessage = "Harga rental tidak bisa negatif!";
+                return;
+            }
 
             if (_selectedImages != null)
             {
@@ -270,7 +307,9 @@ namespace PinjamDuluApp.ViewModels
 
         private void CloseAddEditWindow()
         {
-            IsAddEditWindowVisible = false;
+            //IsAddEditWindowVisible = false;
+            IsPopupOverlayVisible = Visibility.Collapsed;
+            IsOverlayVisible = Visibility.Collapsed;
             SelectedGadget = null;
             _selectedImages = null;
         }

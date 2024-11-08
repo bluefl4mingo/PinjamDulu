@@ -28,7 +28,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="White">
+    <Grid x:Name="MainContent" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
             <RowDefinition Height="*" />
@@ -319,12 +319,20 @@
             </Grid>
         </Border>
 
+        <!--  EDIT POPUP BLACK OVERLAY  -->
+        <Grid
+            x:Name="Overlay"
+            Grid.RowSpan="2"
+            Background="Black"
+            IsHitTestVisible="True"
+            Opacity="0.5"
+            Visibility="{Binding IsOverlayVisible}" />
+
         <!--  Edit Dialog  -->
-        <Popup
-            AllowsTransparency="True"
-            IsOpen="{Binding IsEditDialogOpen}"
-            Placement="Center"
-            PlacementTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}">
+        <Grid
+            Grid.RowSpan="2"
+            Background="Transparent"
+            Visibility="{Binding IsPopupOverlayVisible}">
             <Border
                 Grid.Row="1"
                 Width="500"
@@ -480,6 +488,7 @@
                             </Grid>
                         </Border>
 
+                        <!--  UPLOAD FOTO PROFIl  -->
                         <Grid Margin="0,30,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -515,15 +524,7 @@
                     </StackPanel>
                 </Grid>
             </Border>
-        </Popup>
-
-        <!--  EDIT POPUP OVERLAY  -->
-        <!--<Grid
-            x:Name="Overlay"
-            Grid.RowSpan="2"
-            Background="Black"
-            Opacity="0.5"
-            Visibility="{Binding IsOverlayVisible}" />-->
+        </Grid>
 
     </Grid>
 </Page>

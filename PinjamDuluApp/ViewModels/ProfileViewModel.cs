@@ -20,7 +20,8 @@ namespace PinjamDuluApp.ViewModels
         private readonly DatabaseService _databaseService;
         private readonly NavigationService _navigationService;
         private User _currentUser;
-        private bool _isEditDialogOpen;
+        //private bool _isEditDialogOpen;
+        private Visibility _isPopupOverlayVisible = Visibility.Collapsed;
         private Visibility _isOverlayVisible = Visibility.Collapsed;
 
         // Properties for the edit dialog
@@ -77,15 +78,15 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
-        public bool IsEditDialogOpen
-        {
-            get => _isEditDialogOpen;
-            set
-            {
-                _isEditDialogOpen = value;
-                OnPropertyChanged(nameof(IsEditDialogOpen));
-            }
-        }
+        //public bool IsEditDialogOpen
+        //{
+        //    get => _isEditDialogOpen;
+        //    set
+        //    {
+        //        _isEditDialogOpen = value;
+        //        OnPropertyChanged(nameof(IsEditDialogOpen));
+        //    }
+        //}
 
         public Visibility IsOverlayVisible
         {
@@ -93,7 +94,17 @@ namespace PinjamDuluApp.ViewModels
             set
             {
                 _isOverlayVisible = value;
-                OnPropertyChanged(nameof(IsEditDialogOpen));
+                OnPropertyChanged(nameof(IsOverlayVisible));
+            }
+        }
+
+        public Visibility IsPopupOverlayVisible
+        {
+            get => _isPopupOverlayVisible;
+            set
+            {
+                _isPopupOverlayVisible = value;
+                OnPropertyChanged(nameof(IsPopupOverlayVisible));
             }
         }
 
@@ -158,6 +169,7 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
+
         private void OpenEditDialog()
         {
             EditFullName = CurrentUser.FullName;
@@ -167,8 +179,9 @@ namespace PinjamDuluApp.ViewModels
             EditCity = CurrentUser.City;
             EditContact = CurrentUser.Contact;
             _editProfilePicture = CurrentUser.ProfilePicture;
-            IsEditDialogOpen = true;
+            //IsEditDialogOpen = true;
             IsOverlayVisible = Visibility.Visible;
+            IsPopupOverlayVisible = Visibility.Visible;
         }
 
         private async void SaveChanges()
@@ -190,7 +203,9 @@ namespace PinjamDuluApp.ViewModels
 
                 await _databaseService.UpdateUserProfile(updatedUser);
                 CurrentUser = updatedUser;
-                IsEditDialogOpen = false;
+                //IsEditDialogOpen = false;
+                IsPopupOverlayVisible = Visibility.Collapsed;
+                IsOverlayVisible = Visibility.Collapsed;
                 MessageBox.Show("Profile updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -201,7 +216,8 @@ namespace PinjamDuluApp.ViewModels
 
         private void CancelEdit()
         {
-            IsEditDialogOpen = false;
+            //IsEditDialogOpen = false;
+            IsPopupOverlayVisible = Visibility.Collapsed;
             IsOverlayVisible = Visibility.Collapsed;
         }
 

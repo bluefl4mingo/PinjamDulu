@@ -15,15 +15,16 @@
             <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
         </Style>
 
-        <Style x:Key="GadgetAttributeText" TargetType="TextBlock">
+        <Style x:Key="AttributeText" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#1D1D21" />
         </Style>
 
-        <Style x:Key="GadgetDataText" TargetType="TextBlock">
+        <Style x:Key="DataText" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="#747680" />
         </Style>
     </Page.Resources>
@@ -41,8 +42,8 @@
                 Width="180"
                 Height="40"
                 Margin="50,0,70,0"
-                Style="{StaticResource ButtonTransparent2}"
-                Command="{Binding NavigateToHomeCommand}">
+                Command="{Binding NavigateToHomeCommand}"
+                Style="{StaticResource ButtonTransparent2}">
                 <TextBlock
                     VerticalAlignment="Center"
                     FontSize="30"
@@ -188,6 +189,7 @@
                     Width="205"
                     Height="56"
                     Margin="0,0,0,0"
+                    Command="{Binding ShowAllGadgetsCommand}"
                     FontWeight="SemiBold"
                     GroupName="ListPageBtn"
                     IsChecked="True"
@@ -202,6 +204,7 @@
                     Width="205"
                     Height="56"
                     Margin="30,0,0,0"
+                    Command="{Binding ShowRentedGadgetsCommand}"
                     FontWeight="SemiBold"
                     GroupName="ListPageBtn"
                     Style="{StaticResource RadioButton}">
@@ -226,60 +229,195 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border
-                                Margin="5"
-                                Padding="10"
-                                BorderBrush="Gray"
-                                BorderThickness="1">
+                                Height="300"
+                                Margin="10,0,20,20"
+                                BorderBrush="LightGray"
+                                BorderThickness="1"
+                                CornerRadius="15">
+                                <!--<Border.Effect>
+                                    <DropShadowEffect
+                                        BlurRadius="20"
+                                        Direction="270"
+                                        Opacity="0.3"
+                                        ShadowDepth="5"
+                                        Color="Black" />
+                                </Border.Effect>-->
+
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="200" />
+                                        <ColumnDefinition Width="300" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
                                     <!--  Gadget Image  -->
-                                    <Image
+                                    <Border
                                         Grid.Column="0"
-                                        Width="180"
-                                        Height="180"
-                                        Source="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}"
-                                        Stretch="Uniform" />
+                                        Width="300"
+                                        Height="300"
+                                        CornerRadius="15 0 0 15">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}" Stretch="UniformToFill" />
+                                        </Border.Background>
+                                    </Border>
 
-                                    <!--  Gadget Details  -->
-                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <!--  GADGET DETAIL  -->
+                                    <StackPanel Grid.Column="1" Margin="50,20,0,0">
                                         <TextBlock
-                                            FontSize="16"
+                                            FontSize="22"
+                                            FontWeight="Medium"
+                                            Text="{Binding Title}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <TextBlock
+                                            Margin="0,5,0,10"
+                                            FontSize="28"
                                             FontWeight="Bold"
-                                            Text="{Binding Title}" />
-                                        <TextBlock FontSize="14" Text="{Binding RentalPrice, StringFormat='Rp {0:N0}'}" />
-                                        <TextBlock FontSize="12" Text="{Binding GadgetRating, StringFormat='Rating: {0:F1}'}" />
-                                        <TextBlock FontSize="12" Text="{Binding TimesRented, StringFormat='Rented {0} times'}" />
-                                        <TextBlock FontSize="12" Text="{Binding Category}" />
-                                        <TextBlock FontSize="12" Text="{Binding Brand}" />
-                                        <TextBlock FontSize="12" Text="{Binding ConditionMetric, StringFormat='Condition: {0}/10'}" />
+                                            Text="{Binding RentalPrice, StringFormat='Rp{0:#,#}/day'}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Height="20"
+                                                Margin="0,0,7,3"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Source="/Images/StarIcon.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="/Fonts/#Poppins"
+                                                FontSize="16"
+                                                Foreground="#747680"
+                                                Text="{Binding GadgetRating, StringFormat='{}{0:F1}'}" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="/Fonts/#Poppins"
+                                                FontSize="16"
+                                                Foreground="#747680"
+                                                Text=" | " />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="/Fonts/#Poppins"
+                                                FontSize="16"
+                                                Foreground="#747680"
+                                                Text="{Binding TimesRented, StringFormat='{}{0}x dirental'}" />
+                                        </StackPanel>
 
-                                        <!--  Additional info for rented gadgets  -->
-                                        <TextBlock
-                                            FontSize="12"
-                                            Text="{Binding CurrentRenterUsername, StringFormat='Rented by: {0}'}"
-                                            Visibility="{Binding CurrentRenterUsername, Converter={StaticResource NullToVisibilityConverter}}" />
-                                        <TextBlock
-                                            FontSize="12"
-                                            Text="{Binding CurrentRentalStart, StringFormat='Rental Start: {0:d}'}"
-                                            Visibility="{Binding CurrentRentalStart, Converter={StaticResource NullToVisibilityConverter}}" />
-                                        <TextBlock
-                                            FontSize="12"
-                                            Text="{Binding CurrentRentalEnd, StringFormat='Rental End: {0:d}'}"
-                                            Visibility="{Binding CurrentRentalEnd, Converter={StaticResource NullToVisibilityConverter}}" />
-
-                                        <Button
-                                            Width="80"
-                                            Height="25"
-                                            Margin="0,10,0,0"
-                                            HorizontalAlignment="Left"
-                                            Command="{Binding DataContext.EditGadgetCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Edit" />
+                                        <!--  GADGET ATTRIBUTES  -->
+                                        <Grid Margin="0,27,0,0">
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                VerticalAlignment="Center">
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource AttributeText}"
+                                                    Text="Kategori" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource AttributeText}"
+                                                    Text="Brand" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource AttributeText}"
+                                                    Text="Kondisi" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource AttributeText}"
+                                                    Text="Waktu Tersedia" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Margin="223,0,0,0"
+                                                VerticalAlignment="Center">
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource DataText}"
+                                                    Text="{Binding Category}" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource DataText}"
+                                                    Text="{Binding Brand}" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource DataText}"
+                                                    Text="{Binding ConditionMetric, StringFormat='{}{0}/10'}" />
+                                                <TextBlock
+                                                    Margin="0,5"
+                                                    Style="{StaticResource DataText}"
+                                                    Text="{Binding AvailabilityDate, StringFormat='{}{0:d MMMM yyyy}'}" />
+                                            </StackPanel>
+                                        </Grid>
                                     </StackPanel>
+
+
+                                    <!--  VIEW DETAIL BUTTON  -->
+                                    <Button
+                                        x:Name="btnViewDetail"
+                                        Grid.Column="1"
+                                        Width="105"
+                                        Height="20"
+                                        Margin="0,0,400,70"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding RentCommand}"
+                                        FontSize="14"
+                                        FontWeight="Regular"
+                                        Style="{StaticResource ButtonTransparent}">
+                                        <Grid Width="105">
+                                            <TextBlock HorizontalAlignment="Left" Text="Lihat detail" />
+                                            <Rectangle
+                                                Width="17"
+                                                Height="2"
+                                                HorizontalAlignment="Right"
+                                                Fill="{Binding ElementName=btnViewDetail, Path=Foreground}"
+                                                RadiusX="1"
+                                                RadiusY="1" />
+                                            <Rectangle
+                                                Width="7"
+                                                Height="2"
+                                                Margin="0,0,0,4"
+                                                HorizontalAlignment="Right"
+                                                Fill="{Binding ElementName=btnViewDetail, Path=Foreground}"
+                                                RadiusX="1"
+                                                RadiusY="1">
+                                                <Rectangle.LayoutTransform>
+                                                    <RotateTransform Angle="50" />
+                                                </Rectangle.LayoutTransform>
+                                            </Rectangle>
+                                            <Rectangle
+                                                Width="7"
+                                                Height="2"
+                                                Margin="0,4,0,0"
+                                                HorizontalAlignment="Right"
+                                                Fill="{Binding ElementName=btnViewDetail, Path=Foreground}"
+                                                RadiusX="1"
+                                                RadiusY="1">
+                                                <Rectangle.LayoutTransform>
+                                                    <RotateTransform Angle="-50" />
+                                                </Rectangle.LayoutTransform>
+                                            </Rectangle>
+                                            <Rectangle
+                                                Width="110"
+                                                Height="1"
+                                                VerticalAlignment="Bottom"
+                                                Fill="{Binding ElementName=btnViewDetail, Path=Foreground}"
+                                                RadiusX="1"
+                                                RadiusY="1" />
+                                        </Grid>
+                                    </Button>
+
+                                    <!--  EDIT GADGET BUTTON  -->
+                                    <Button
+                                        Grid.Column="1"
+                                        Width="64"
+                                        Height="26"
+                                        Margin="0,30,50,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding DataContext.EditGadgetCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Ubah"
+                                        FontSize="24"
+                                        FontWeight="SemiBold"
+                                        Style="{StaticResource ButtonTransparent2}" />
+
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -287,108 +425,275 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <!--  ADD / EDIT POP UP  -->
-            <Popup
-                AllowsTransparency="True"
-                IsOpen="{Binding IsAddEditWindowVisible}"
-                Placement="Center"
-                PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Page}}">
-                <Border
-                    Padding="20"
-                    Background="White"
-                    BorderBrush="Gray"
-                    BorderThickness="1">
-                    <StackPanel Width="400">
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="16"
-                            FontWeight="Bold"
-                            Text="{Binding WindowTitle}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Title" />
-                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Title}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Description" />
-                        <TextBox
-                            Height="60"
-                            Margin="0,5"
-                            Text="{Binding SelectedGadget.Description}"
-                            TextWrapping="Wrap" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Category" />
-                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Category}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Brand" />
-                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.Brand}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Condition" />
-                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.ConditionMetric}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Rental Price" />
-                        <TextBox Margin="0,5" Text="{Binding SelectedGadget.RentalPrice}" />
-
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Text="Availability Date" />
-                        <DatePicker Margin="0,5" SelectedDate="{Binding SelectedGadget.AvailabilityDate}" />
-
-                        <Button
-                            Margin="0,10"
-                            Command="{Binding SelectImagesCommand}"
-                            Content="Select Images (4 Images please)" />
-                        <TextBlock
-                            Margin="0,5"
-                            Foreground="Red"
-                            Text="{Binding ErrorMessage}"
-                            TextWrapping="Wrap" />
-
-                        <StackPanel
-                            Margin="0,20,0,0"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Width="80"
-                                Height="25"
-                                Margin="0,0,10,0"
-                                Command="{Binding SaveGadgetCommand}"
-                                Content="Save" />
-                            <Button
-                                Width="80"
-                                Height="25"
-                                Command="{Binding CancelCommand}"
-                                Content="Cancel" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Popup>
-
         </Grid>
 
+        <!--  EDIT POPUP BLACK OVERLAY  -->
+        <Grid
+            x:Name="Overlay"
+            Grid.RowSpan="2"
+            Background="Black"
+            IsHitTestVisible="True"
+            Opacity="0.5"
+            Visibility="{Binding IsOverlayVisible}" />
+
+        <!--  ADD / EDIT POP UP  -->
+        <Grid
+            Grid.RowSpan="2"
+            Background="Transparent"
+            Visibility="{Binding IsPopupOverlayVisible}">
+            <Border
+                Width="950"
+                Height="850"
+                Background="White"
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  POPUP WINDOW TITLE  -->
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="55,50,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Text="{Binding WindowTitle}" />
+
+                    <!--  CANCEL BUTTON  -->
+                    <Border
+                        Grid.Column="1"
+                        Margin="0,30,30,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        CornerRadius="20">
+                        <Button
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Command="{Binding CancelCommand}"
+                            Style="{StaticResource ButtonTransparent}">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/XCircle.png" />
+                        </Button>
+                    </Border>
+                    <StackPanel
+                        Grid.Column="0"
+                        Width="380"
+                        Margin="20,130,0,0"
+                        VerticalAlignment="Top">
+                        <!--  NAMA GADGET  -->
+                        <TextBlock
+                            Margin="0,0,0,3"
+                            FontSize="16"
+                            Text="Nama Gadget" />
+                        <Border
+                            Width="Auto"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 12 7 0">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.Title}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  DESKRIPSI  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Deskripsi" />
+                        <Border
+                            Width="Auto"
+                            Height="380"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 12 7 0">
+                                <TextBox
+                                    Height="380"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.Description}"
+                                    TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Width="380"
+                        Margin="0,130,20,0"
+                        VerticalAlignment="Top">
+                        <!--  CATEGORY  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Kategori" />
+                        <Border
+                            Width="Auto"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 12 7 0">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.Category}"
+                                    TextWrapping="NoWrap" />
+                            </Grid>
+                        </Border>
+
+                        <!--  BRAND  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Brand" />
+                        <Border
+                            Width="Auto"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 12 7 0">
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.Brand}"
+                                    TextWrapping="NoWrap" />
+                            </Grid>
+                        </Border>
+
+                        <!--  KONDISI  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Kondisi" />
+                        <Border
+                            Width="Auto"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid>
+                                <TextBox
+                                    Grid.ColumnSpan="2"
+                                    Margin="7 12 7 0"
+                                    PreviewTextInput="TextBox_PreviewTextInput"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.ConditionMetric, StringFormat={}{0:#}}"
+                                    TextWrapping="NoWrap" />
+                                <Rectangle
+                                    Width="2"
+                                    Height="50"
+                                    Margin="0,0,40,0"
+                                    HorizontalAlignment="Right"
+                                    Fill="LightGray" />
+                                <TextBlock
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    FontSize="15"
+                                    Text="/10" />
+                            </Grid>
+                        </Border>
+
+                        <!--  RENTAL PRICE  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Harga Rental" />
+                        <Border
+                            Width="Auto"
+                            Height="50"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 12 7 0" >
+                                <TextBox
+                                    PreviewTextInput="TextBox_PreviewTextInput"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding SelectedGadget.RentalPrice, StringFormat={}{0:#}}"
+                                    TextWrapping="NoWrap" />
+                            </Grid>
+                        </Border>
+
+                        <!--  AVAILABLE DATE  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Waktu Tersedia" />
+                        <Border
+                            Height="50"
+                            Width="Auto"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Grid Margin="7 0 7 0">
+                                <DatePicker
+                                    Height="30"
+                                    FontSize="16"
+                                    SelectedDate="{Binding SelectedGadget.AvailabilityDate}"
+                                    Style="{StaticResource TextBoxGeneral2}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  FOTO GADGET  -->
+                        <Grid Width="Auto" Margin="0,25,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Pilih Foto (maks 4)" />
+                            <Button
+                                Grid.Column="1"
+                                Width="170"
+                                Height="40"
+                                Command="{Binding SelectImagesCommand}"
+                                Content="Upload"
+                                Style="{StaticResource ButtonGeneral2}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <!--  ERROR MESSAGE  -->
+                    <TextBlock
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,0,130"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        FontSize="14"
+                        Foreground="Red"
+                        Text="{Binding ErrorMessage}"
+                        TextWrapping="Wrap" />
+
+                    <!--  SAVE BUTTON  -->
+                    <Button
+                        Grid.ColumnSpan="2"
+                        Width="330"
+                        Height="50"
+                        Margin="0,0,0,50"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding SaveGadgetCommand}"
+                        Content="Simpan"
+                        FontSize="16"
+                        Style="{StaticResource ButtonGeneral}" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Page>
