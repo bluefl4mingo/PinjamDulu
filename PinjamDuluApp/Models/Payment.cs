@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace PinjamDuluApp.Models
 {
-    internal class Payment
+    public class Payment
     {
-        public string Id { get; set; }
-        public string BookingID { get; set; }
-        public int Amount { get; set; }
+        public Guid PaymentId { get; set; }
+        public Guid BookingId { get; set; }
+        public decimal Amount { get; set; }
+        public string PaymentMethod { get; set; }
         public bool PaymentStatus { get; set; }
         public DateTime TransactionDate { get; set; }
-
-        public Payment() 
-        { 
-        
-        }
     }
 }

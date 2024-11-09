@@ -27,6 +27,12 @@ namespace PinjamDuluApp.Views
             DataContext = new ProfileViewModel(MainWindow.NavigationService, user);
             InitializeComponent();
         }
+
+        private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            // Allow only digits and the decimal point
+            e.Handled = !char.IsDigit(e.Text, 0) && e.Text != ".";
+        }
     }
 }
 
