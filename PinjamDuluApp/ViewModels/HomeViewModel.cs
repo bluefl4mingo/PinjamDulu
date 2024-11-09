@@ -48,12 +48,22 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
+        private string _searchQuery;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+            }
+        }
+        public ICommand SearchCommand { get; }
         public ICommand SignOutCommand { get; }
         public ICommand GadgetSelectedCommand { get; }
         public ICommand NavigateToListingCommand { get; }
         public ICommand NavigateToRentalCommand { get; }
         public ICommand NavigateToProfileCommand { get; }
-        public ICommand NavigateToSearchCommand { get; }
 
         public HomeViewModel(NavigationService navigationService, User user)
         {
@@ -70,12 +80,22 @@ namespace PinjamDuluApp.ViewModels
             NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
             NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
+            SearchCommand = new RelayCommand(ExecuteSearch);
 
-            //UNCOMMENT LINE DI BAWAH KALO READY BUAT PAGE: SearchPage.xaml
-            //NavigateToSearchCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(SearchPage), user));
 
             // Load gadgets when view model is created
             LoadGadgetsAsync();
+        }
+
+        private void ExecuteSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+
+                // UNCOMMENT KALO MAU BUAT SEARCH PAGE
+                //_navigationService.NavigateTo(typeof(SearchPage), searchParams);
+            }
         }
 
         private async void LoadGadgetsAsync()
@@ -108,5 +128,11 @@ namespace PinjamDuluApp.ViewModels
                 _navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
             }
         }
+    }
+
+    public class SearchParameters
+    {
+        public string Query { get; set; }
+        public User User { get; set; }
     }
 }

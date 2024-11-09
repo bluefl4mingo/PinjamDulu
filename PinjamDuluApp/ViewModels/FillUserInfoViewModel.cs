@@ -143,7 +143,6 @@ namespace PinjamDuluApp.ViewModels
             catch (Exception ex)
             {
                 ErrorMessage = "*An error occurred while creating your account: " + ex.Message;
-                //System.Windows.MessageBox.Show($"Error creating account: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK);
             }
         }
     }

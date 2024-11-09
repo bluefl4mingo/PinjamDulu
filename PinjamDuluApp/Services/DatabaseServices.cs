@@ -9,7 +9,7 @@ namespace PinjamDuluApp.Services
 
     public class DatabaseService
     {
-        //--------------------------- AUTHENTICATION SERVICES (services for Page: Login, SignUp, FIll User Information) ---------------------------//
+        //--------------------------- AUTHENTICATION SERVICES ---------------------------//
         private readonly string _connectionString;
 
         public DatabaseService()
@@ -122,31 +122,28 @@ namespace PinjamDuluApp.Services
 
 
 
-        //--------------------------- HOME PAGE SERVICES (services for Page: Home Page) ---------------------------//
+        //--------------------------- HOME PAGE SERVICES ---------------------------//
         public async Task<List<Gadget>> GetRandomGadgets(int count = 20)
         {
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
                 var gadgets = new List<Gadget>();
-
                 var sql = @"
-                    SELECT g.*, 
-                           gi.image[1] as first_image,
-                           COUNT(DISTINCT b.booking_id) as times_rented,
-                           u.city as owner_city
-                    FROM public.""Gadget"" g
-                    LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
-                    LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
-                    LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
-                    GROUP BY g.gadget_id, gi.image[1], u.city
-                    ORDER BY RANDOM()
-                    LIMIT @count";
-
+                            SELECT g.*, 
+                                   gi.image[1] as first_image,
+                                   COUNT(DISTINCT b.booking_id) as times_rented,
+                                   u.city as owner_city
+                            FROM public.""Gadget"" g
+                            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+                            LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+                            LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
+                            GROUP BY g.gadget_id, gi.image[1], u.city
+                            ORDER BY RANDOM()
+                            LIMIT @count";
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("count", count);
-
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -545,45 +542,6 @@ namespace PinjamDuluApp.Services
 
 
         //--------------------------- GADGET DETAIL PAGE SERVICES ---------------------------//
-        public async Task<Gadget> GetGadgetById(Guid gadgetId)
-        {
-            using (var conn = new NpgsqlConnection(_connectionString))
-            {
-                await conn.OpenAsync();
-                var sql = @"SELECT g.*, u.city as owner_city, 
-                            (SELECT COUNT(*) FROM public.""Booking"" WHERE gadget_id = g.gadget_id) as times_rented
-                            FROM public.""Gadget"" g
-                            JOIN public.""User"" u ON g.owner_id = u.user_id
-                            WHERE g.gadget_id = @gadgetId";
-                using (var cmd = new NpgsqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("gadgetId", gadgetId);
-                    using (var reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            return new Gadget
-                            {
-                                GadgetId = reader.GetGuid(reader.GetOrdinal("gadget_id")),
-                                OwnerId = reader.GetGuid(reader.GetOrdinal("owner_id")),
-                                Title = reader.GetString(reader.GetOrdinal("title")),
-                                Description = reader.GetString(reader.GetOrdinal("description")),
-                                Category = reader.GetString(reader.GetOrdinal("category")),
-                                Brand = reader.GetString(reader.GetOrdinal("brand")),
-                                ConditionMetric = reader.GetInt32(reader.GetOrdinal("condition_metric")),
-                                GadgetRating = reader.GetFloat(reader.GetOrdinal("gadget_rating")),
-                                RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
-                                Availability = reader.GetBoolean(reader.GetOrdinal("availability")),
-                                AvailabilityDate = reader.IsDBNull(reader.GetOrdinal("availability_date")) ? null : reader.GetDateTime(reader.GetOrdinal("availability_date")),
-                                OwnerCity = reader.GetString(reader.GetOrdinal("owner_city")),
-                                TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented"))
-                            };
-                        }
-                    }
-                }
-            }
-            return null;
-        }
 
         public async Task<List<Review>> GetGadgetReviews(Guid gadgetId)
         {
@@ -645,6 +603,285 @@ namespace PinjamDuluApp.Services
                 {
                     cmd.Parameters.AddWithValue("gadgetId", gadgetId);
                     return (string)await cmd.ExecuteScalarAsync();
+                }
+            }
+        }
+
+        public async Task<(bool isAvailable, string message)> CheckGadgetAvailabilityForRental(Guid gadgetId, Guid userId)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                // First check if user owns this gadget
+                var ownershipSql = @"
+                                    SELECT owner_id 
+                                    FROM public.""Gadget"" 
+                                    WHERE gadget_id = @gadgetId";
+
+                using (var cmd = new NpgsqlCommand(ownershipSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("gadgetId", gadgetId);
+                    var ownerId = await cmd.ExecuteScalarAsync() as Guid?;
+
+                    if (ownerId == userId)
+                    {
+                        return (false, "You cannot rent your own gadget.");
+                    }
+                }
+
+                // Then check if gadget is currently rented
+                var rentalSql = @"
+                                SELECT COUNT(*) 
+                                FROM public.""Booking"" 
+                                WHERE gadget_id = @gadgetId 
+                                AND CURRENT_DATE BETWEEN rental_start_date AND rental_end_date";
+
+                using (var cmd = new NpgsqlCommand(rentalSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("gadgetId", gadgetId);
+                    var activeRentals = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+
+                    if (activeRentals > 0)
+                    {
+                        return (false, "This gadget is currently being rented by another user.");
+                    }
+                }
+
+                return (true, "Available for rental");
+            }
+        }
+
+
+
+        //--------------------------- PAYMENT & BOOKING SERVICES ---------------------------//
+        public async Task CreateBooking(Booking booking)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                // Begin transaction
+                using (var transaction = await conn.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // 1. Insert the booking
+                        var bookingSql = @"
+                    INSERT INTO public.""Booking"" (
+                        booking_id, gadget_id, borrower_id, lender_id, 
+                        booking_date, rental_start_date, rental_end_date
+                    )
+                    VALUES (
+                        @bookingId, @gadgetId, @borrowerId, @lenderId, 
+                        @bookingDate, @rentalStartDate, @rentalEndDate
+                    )";
+
+                        using (var cmd = new NpgsqlCommand(bookingSql, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("bookingId", booking.BookingId);
+                            cmd.Parameters.AddWithValue("gadgetId", booking.GadgetId);
+                            cmd.Parameters.AddWithValue("borrowerId", booking.BorrowerId);
+                            cmd.Parameters.AddWithValue("lenderId", booking.LenderId);
+                            cmd.Parameters.AddWithValue("bookingDate", booking.BookingDate);
+                            cmd.Parameters.AddWithValue("rentalStartDate", booking.RentalStartDate);
+                            cmd.Parameters.AddWithValue("rentalEndDate", booking.RentalEndDate);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+
+                        // 2. Update the gadget availability
+                        var gadgetUpdateSql = @"
+                    UPDATE public.""Gadget""
+                    SET availability = false,
+                        availability_date = @availabilityDate
+                    WHERE gadget_id = @gadgetId";
+
+                        using (var cmd = new NpgsqlCommand(gadgetUpdateSql, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("gadgetId", booking.GadgetId);
+                            cmd.Parameters.AddWithValue("availabilityDate", booking.RentalEndDate.AddDays(1));
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+
+                        // Commit the transaction
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // If anything goes wrong, roll back both operations
+                        await transaction.RollbackAsync();
+                        throw; // Re-throw the exception to be handled by the caller
+                    }
+                }
+            }
+        }
+
+        public async Task CreatePayment(Payment payment)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var sql = @"INSERT INTO public.""Payment"" (payment_id, booking_id, amount, payment_method, payment_status, transaction_date)
+                            VALUES (@paymentId, @bookingId, @amount, @paymentMethod, @paymentStatus, @transactionDate)";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("paymentId", payment.PaymentId);
+                    cmd.Parameters.AddWithValue("bookingId", payment.BookingId);
+                    cmd.Parameters.AddWithValue("amount", payment.Amount);
+                    cmd.Parameters.AddWithValue("paymentMethod", payment.PaymentMethod);
+                    cmd.Parameters.AddWithValue("paymentStatus", payment.PaymentStatus);
+                    cmd.Parameters.AddWithValue("transactionDate", payment.TransactionDate);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
+
+
+        //--------------------------- SEARCH SERVICES ---------------------------//
+        public async Task<List<Gadget>> SearchGadgets(string searchQuery, string category = null, decimal? minPrice = null, decimal? maxPrice = null, float? minRating = null, int? minCondition = null)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var gadgets = new List<Gadget>();
+
+                // Clean and prepare the search query
+                searchQuery = searchQuery?.Trim() ?? "";
+
+                var sql = @"
+                        SELECT DISTINCT g.*, 
+                               gi.image[1] as first_image,
+                               COUNT(DISTINCT b.booking_id) as times_rented,
+                               u.city as owner_city
+                        FROM public.""Gadget"" g
+                        LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+                        LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+                        LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
+                        WHERE (@searchQuery = '' OR ( -- Only apply search if there's a search query
+                            LOWER(g.title) LIKE LOWER(@searchQuery)
+                            OR LOWER(g.description) LIKE LOWER(@searchQuery)
+                            OR LOWER(g.brand) LIKE LOWER(@searchQuery)
+                        ))
+                        AND (@category IS NULL OR LOWER(g.category) = LOWER(@category))
+                        AND (@minPrice IS NULL OR g.rental_price >= @minPrice)
+                        AND (@maxPrice IS NULL OR g.rental_price <= @maxPrice)
+                        AND (@minRating IS NULL OR g.gadget_rating >= @minRating)
+                        AND (@minCondition IS NULL OR g.condition_metric >= @minCondition)
+                        GROUP BY g.gadget_id, gi.image[1], u.city";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    // Add parameters with explicit types
+                    cmd.Parameters.Add(new NpgsqlParameter("searchQuery", NpgsqlTypes.NpgsqlDbType.Text)
+                    { Value = string.IsNullOrWhiteSpace(searchQuery) ? "" : $"%{searchQuery}%" });
+
+                    cmd.Parameters.Add(new NpgsqlParameter("category", NpgsqlTypes.NpgsqlDbType.Text)
+                    { Value = string.IsNullOrWhiteSpace(category) ? DBNull.Value : category.ToLower() });
+
+                    cmd.Parameters.Add(new NpgsqlParameter("minPrice", NpgsqlTypes.NpgsqlDbType.Numeric)
+                    { Value = (object)minPrice ?? DBNull.Value });
+
+                    cmd.Parameters.Add(new NpgsqlParameter("maxPrice", NpgsqlTypes.NpgsqlDbType.Numeric)
+                    { Value = (object)maxPrice ?? DBNull.Value });
+
+                    cmd.Parameters.Add(new NpgsqlParameter("minRating", NpgsqlTypes.NpgsqlDbType.Real)
+                    { Value = (object)minRating ?? DBNull.Value });
+
+                    cmd.Parameters.Add(new NpgsqlParameter("minCondition", NpgsqlTypes.NpgsqlDbType.Integer)
+                    { Value = (object)minCondition ?? DBNull.Value });
+
+                    // Debug logging
+                    System.Diagnostics.Debug.WriteLine($"Executing search with parameters:");
+                    foreach (NpgsqlParameter p in cmd.Parameters)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Parameter {p.ParameterName}: {p.Value} (Type: {p.NpgsqlDbType})");
+                    }
+
+                    try
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            var hasRows = reader.HasRows;
+                            System.Diagnostics.Debug.WriteLine($"Query returned results: {hasRows}");
+
+                            while (await reader.ReadAsync())
+                            {
+                                var gadget = new Gadget
+                                {
+                                    GadgetId = reader.GetGuid(reader.GetOrdinal("gadget_id")),
+                                    OwnerId = reader.GetGuid(reader.GetOrdinal("owner_id")),
+                                    Title = reader.GetString(reader.GetOrdinal("title")),
+                                    Description = reader.GetString(reader.GetOrdinal("description")),
+                                    Category = reader.GetString(reader.GetOrdinal("category")),
+                                    Brand = reader.GetString(reader.GetOrdinal("brand")),
+                                    ConditionMetric = reader.GetInt32(reader.GetOrdinal("condition_metric")),
+                                    GadgetRating = reader.GetFloat(reader.GetOrdinal("gadget_rating")),
+                                    RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
+                                    Availability = reader.GetBoolean(reader.GetOrdinal("availability")),
+                                    Images = reader.IsDBNull(reader.GetOrdinal("first_image")) ? null : new[] { (byte[])reader["first_image"] },
+                                    TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented")),
+                                    OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? null : reader.GetString(reader.GetOrdinal("owner_city"))
+                                };
+                                gadgets.Add(gadget);
+                                System.Diagnostics.Debug.WriteLine($"Found gadget: {gadget.Title}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error executing query: {ex.Message}");
+                        throw;
+                    }
+                }
+                return gadgets;
+            }
+        }
+
+
+
+        //--------------------------- update gadget availability everytime the app launches ---------------------------//
+        public async Task UpdateGadgetAvailabilityStatus()
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                var sql = @"
+                            -- Update gadgets that have passed their availability_date to be today
+                            UPDATE public.""Gadget"" g
+                            SET 
+                                availability = true,
+                                availability_date = CURRENT_DATE
+                            WHERE availability_date IS NOT NULL 
+                            AND CURRENT_DATE > availability_date;
+
+                            -- Then, update gadgets based on current bookings
+                            UPDATE public.""Gadget"" g
+                            SET 
+                                availability = NOT EXISTS (
+                                    SELECT 1 
+                                    FROM public.""Booking"" b
+                                    WHERE b.gadget_id = g.gadget_id
+                                    AND CURRENT_DATE BETWEEN b.rental_start_date AND b.rental_end_date
+                                ),
+                                availability_date = (
+                                    SELECT b.rental_end_date + 1
+                                    FROM public.""Booking"" b
+                                    WHERE b.gadget_id = g.gadget_id
+                                    AND CURRENT_DATE BETWEEN b.rental_start_date AND b.rental_end_date
+                                )
+                            WHERE EXISTS (
+                                SELECT 1 
+                                FROM public.""Booking"" b
+                                WHERE b.gadget_id = g.gadget_id
+                                AND CURRENT_DATE BETWEEN b.rental_start_date AND b.rental_end_date
+                            );";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }

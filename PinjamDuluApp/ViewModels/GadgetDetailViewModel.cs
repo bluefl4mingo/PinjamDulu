@@ -4,6 +4,7 @@ using PinjamDuluApp.Models;
 using PinjamDuluApp.Services;
 using PinjamDuluApp.ViewModels;
 using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -106,17 +107,55 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
-        private void InitiateRental(User user)
+        private async void InitiateRental(User user)
         {
-            var paymentParameters = new PaymentParameters
+            try
             {
-                GadgetId = Gadget.GadgetId,
-                RentEndDate = RentEndDate,
-                TotalPrice = TotalPrice
-            };
+                // Check if the selected rental end date is before the current date
+                if (RentEndDate < DateTime.Today)
+                {
+                    MessageBox.Show(
+                        "You cannot select a rental end date that is today's or before today's date.",
+                        "Invalid Rental Date",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
 
-            // UNCOMMENT THIS IF YOU ARE READY TO MAKE StripePayment.xaml
-            //_navigationService.NavigateTo(typeof(StripePayment), user, paymentParameters);
+                var (isAvailable, message) = await _databaseService.CheckGadgetAvailabilityForRental(Gadget.GadgetId, user.UserId);
+
+                if (!isAvailable)
+                {
+                    MessageBox.Show(
+                        message,
+                        "Rental Not Allowed",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
+
+                var paymentParameters = new PaymentParameters
+                {
+                    GadgetId = Gadget.GadgetId,
+                    RentEndDate = RentEndDate,
+                    TotalPrice = TotalPrice
+                };
+
+                // UNCOMMENT KALO UDAH MAU BUAT PAYMENT PAGE
+                //_navigationService.NavigateTo(typeof(StripePayment), user, paymentParameters);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "An error occurred while processing your rental request. Please try again.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                System.Diagnostics.Debug.WriteLine($"Rental initiation error: {ex.Message}");
+            }
         }
     }
 

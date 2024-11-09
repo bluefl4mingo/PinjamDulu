@@ -484,7 +484,9 @@
                                     Grid.ColumnSpan="2"
                                     Margin="5,5,5,5"
                                     Style="{StaticResource TextBoxGeneral2}"
-                                    Text="{Binding EditContact, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding EditContact, UpdateSourceTrigger=PropertyChanged}"
+                                    PreviewTextInput="TextBox_PreviewTextInput"
+                                    />
                             </Grid>
                         </Border>
 
