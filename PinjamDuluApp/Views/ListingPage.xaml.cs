@@ -33,5 +33,22 @@ namespace PinjamDuluApp.Views
             // Allow only digits and the decimal point
             e.Handled = !char.IsDigit(e.Text, 0) && e.Text != ".";
         }
+
+        private void txtSearch_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            boxSearch.Focus();
+        }
+
+        private void boxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(boxSearch.Text) && boxSearch.Text.Length > 0)
+            {
+                txtSearch.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                txtSearch.Visibility = Visibility.Visible;
+            }
+        }
     }
 }

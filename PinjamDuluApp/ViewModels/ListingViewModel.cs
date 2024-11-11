@@ -28,6 +28,7 @@ namespace PinjamDuluApp.ViewModels
         private bool _isEditing;
         private string _windowTitle;
         private byte[][] _selectedImages;
+        private string _searchQuery;
 
         private bool _isLoading;
         private string _errorMessage;
@@ -58,7 +59,20 @@ namespace PinjamDuluApp.ViewModels
             NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
             NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
+            SearchCommand = new RelayCommand(ExecuteSearch);
         }
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+            }
+        }
+
+        public ObservableCollection<string> CategoryOptions { get; } = new ObservableCollection<string> {"Handphone", "Tablet", "Laptop", "Smartwatch", "Headphone", "Drone"};
 
         public bool IsLoading
         {
@@ -148,6 +162,7 @@ namespace PinjamDuluApp.ViewModels
         public ICommand NavigateToRentalCommand { get; }
         public ICommand NavigateToProfileCommand { get; }
         public ICommand NavigateToHomeCommand { get; }
+        public ICommand SearchCommand { get; }
 
         private async void LoadGadgets()
         {
@@ -312,6 +327,23 @@ namespace PinjamDuluApp.ViewModels
             IsOverlayVisible = Visibility.Collapsed;
             SelectedGadget = null;
             _selectedImages = null;
+        }
+
+        private void ExecuteSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+
+                // UNCOMMENT KALO MAU BUAT SEARCH PAGE
+                _navigationService.NavigateTo(typeof(SearchPage), searchParams);
+            }
+        }
+
+        public class SearchParameters
+        {
+            public string Query { get; set; }
+            public User User { get; set; }
         }
     }
 }

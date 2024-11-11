@@ -143,8 +143,8 @@ namespace PinjamDuluApp.ViewModels
                     TotalPrice = TotalPrice
                 };
 
-                // UNCOMMENT KALO UDAH MAU BUAT PAYMENT PAGE
-                //_navigationService.NavigateTo(typeof(StripePayment), user, paymentParameters);
+                //UNCOMMENT KALO UDAH MAU BUAT PAYMENT PAGE
+                _navigationService.NavigateTo(typeof(StripePayment), user, paymentParameters);
             }
             catch (Exception ex)
             {

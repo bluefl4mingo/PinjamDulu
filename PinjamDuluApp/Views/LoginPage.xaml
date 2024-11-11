@@ -132,8 +132,8 @@
                     FontSize="16"
                     Foreground="Red"
                     Text="{Binding ErrorMessage}"
-                    TextWrapping="Wrap"
-                    TextAlignment="Center"/>
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
 
                 <!--  LOGIN BUTTON  -->
                 <Button

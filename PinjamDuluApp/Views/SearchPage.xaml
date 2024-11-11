@@ -1,0 +1,546 @@
+﻿<Page
+    x:Class="PinjamDuluApp.Views.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PinjamDuluApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="SearchPage"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="white">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  HEADER NAV BAR  -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!--  PINJAM DULU LOGO  -->
+            <Button
+                Width="180"
+                Height="40"
+                Margin="50,0,70,0"
+                Command="{Binding NavigateToHomeCommand}"
+                Style="{StaticResource ButtonTransparent2}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Text="PinjamDulu">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="-2,-1" EndPoint="1, 1">
+                            <GradientStop Offset="0.2" Color="#FFFFFF" />
+                            <GradientStop Offset="0.79" Color="#CBAEAE" />
+                            <GradientStop Offset="1" Color="#F5C8AB" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Button>
+
+            <!--  SEARCH BAR  -->
+            <Border
+                Width="910"
+                Height="70"
+                BorderBrush="#B6B7BA"
+                BorderThickness="1"
+                CornerRadius="7">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Grid.Column="0"
+                        Height="35"
+                        Source="/Images/SearchIcon.png" />
+                    <TextBlock
+                        x:Name="txtSearch"
+                        Grid.Column="1"
+                        Margin="2,0"
+                        VerticalAlignment="Center"
+                        FontSize="22"
+                        MouseDown="txtSearch_MouseDown"
+                        Style="{StaticResource TextHint}"
+                        Text="Cari Gadget" />
+                    <TextBox
+                        x:Name="boxSearch"
+                        Grid.Column="1"
+                        Padding="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxGeneral}"
+                        Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanged="boxSearch_TextChanged"
+                        TextWrapping="NoWrap" />
+                </Grid>
+            </Border>
+
+            <!--  RENTAL BUTTON  -->
+            <Button
+                Width="165"
+                Height="56"
+                Margin="40,0,0,0"
+                Command="{Binding NavigateToRentalCommand}"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ShopCart.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Rental" />
+                </StackPanel>
+            </Button>
+            <!--  LISTING BUTTON  -->
+            <Button
+                Width="165"
+                Height="56"
+                Margin="25,0,0,0"
+                Command="{Binding NavigateToListingCommand}"
+                FontWeight="SemiBold"
+                Style="{StaticResource ButtonGeneral3}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,15,0"
+                        Source="/Images/ListIcon.png" />
+                    <TextBlock VerticalAlignment="Center" Text="Listing" />
+                </StackPanel>
+            </Button>
+            <Button
+                Width="165"
+                Height="50"
+                Margin="75,0,0,0"
+                Command="{Binding NavigateToProfileCommand}"
+                FontWeight="Bold"
+                Style="{StaticResource ButtonTransparent2}">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="50"
+                        Height="50"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Source="/Images/UserCircle.png" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Text="Profile" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!--  LINE SEPARATOR  -->
+        <Rectangle
+            Grid.Row="0"
+            Width="1775"
+            Height="3"
+            VerticalAlignment="Bottom"
+            Fill="#EAEAEA" />
+
+        <!--  FILTER GRID  -->
+        <Border
+            Grid.Row="1"
+            Width="400"
+            Height="830"
+            Margin="0,0,100,0"
+            Padding="25"
+            HorizontalAlignment="Right"
+            BorderBrush="#B6B7BA"
+            BorderThickness="1"
+            CornerRadius="20">
+
+            <Grid>
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Text="Kategori Gadget" />
+                    <RadioButton
+                        Margin="5"
+                        Content="All"
+                        IsChecked="{Binding SelectedCategory, Converter={StaticResource NullValueToBooleanConverter}}" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Handphone"
+                        Tag="handphone" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Tablet"
+                        Tag="tablet" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Laptop"
+                        Tag="laptop" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Smartwatch"
+                        Tag="smartwatch" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Headphone"
+                        Tag="Camera" />
+                    <RadioButton
+                        Margin="5"
+                        Checked="OnCategoryChecked"
+                        Content="Drone"
+                        Tag="Drone" />
+
+                    <!--  LINE SEPARATOR  -->
+                    <Rectangle
+                        Grid.Row="0"
+                        Width="Auto"
+                        Height="2"
+                        Margin="0,15,0,15"
+                        Fill="#EAEAEA" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Text="Harga" />
+                    <!--  HARGA MIN TEXT BOX  -->
+                    <Border
+                        Width="Auto"
+                        Height="56"
+                        Margin="0,0,0,15"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Column="0"
+                                Background="#EAEAEA"
+                                CornerRadius="6 0 0 6" />
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                Foreground="#747680"
+                                Text="Rp" />
+                            <TextBlock
+                                x:Name="txtHargaMin"
+                                Grid.Column="1"
+                                Margin="8,5"
+                                Padding="0,8,0,0"
+                                MouseDown="txtHargaMin_MouseDown"
+                                Style="{StaticResource TextHint}"
+                                Text="Harga Minimum" />
+                            <TextBox
+                                x:Name="boxHargaMin"
+                                Grid.Column="1"
+                                MaxWidth="325"
+                                Margin="5"
+                                Padding="0,7,0,0"
+                                PreviewTextInput="NumberValidationTextBox"
+                                Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="boxHargaMin_TextChanged"
+                                TextWrapping="NoWrap" />
+                        </Grid>
+                    </Border>
+
+                    <!--  HARGA MAX TEXT BOX  -->
+                    <Border
+                        Width="Auto"
+                        Height="56"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Column="0"
+                                Background="#EAEAEA"
+                                CornerRadius="6 0 0 6" />
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                Foreground="#747680"
+                                Text="Rp" />
+                            <TextBlock
+                                x:Name="txtHargaMax"
+                                Grid.Column="1"
+                                Margin="8,5"
+                                Padding="0,8,0,0"
+                                MouseDown="txtHargaMax_MouseDown"
+                                Style="{StaticResource TextHint}"
+                                Text="Harga Maksimum" />
+                            <TextBox
+                                x:Name="boxHargaMax"
+                                Grid.Column="1"
+                                MaxWidth="325"
+                                Margin="5"
+                                Padding="0,7,0,0"
+                                PreviewTextInput="NumberValidationTextBox"
+                                Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="boxHargaMax_TextChanged"
+                                TextWrapping="NoWrap" />
+                        </Grid>
+                    </Border>
+
+                    <!--  LINE SEPARATOR  -->
+                    <Rectangle
+                        Grid.Row="0"
+                        Width="Auto"
+                        Height="2"
+                        Margin="0,15,0,15"
+                        Fill="#EAEAEA" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Text="Rating Minimum" />
+                    <!--  RATING TEXT BOX  -->
+                    <Border
+                        Width="350"
+                        Height="56"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid>
+                            <TextBlock
+                                x:Name="txtRating"
+                                Grid.Column="1"
+                                Margin="8,5"
+                                Padding="0,8,0,0"
+                                MouseDown="txtRating_MouseDown"
+                                Style="{StaticResource TextHint}"
+                                Text=" 0-5" />
+                            <TextBox
+                                x:Name="boxRating"
+                                Grid.Column="1"
+                                MaxWidth="325"
+                                Margin="5"
+                                Padding="0,7,0,0"
+                                PreviewTextInput="RatingValidationTextBox"
+                                Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding MinRating, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="boxRating_TextChanged"
+                                TextWrapping="NoWrap" />
+                        </Grid>
+                    </Border>
+
+                    <!--  LINE SEPARATOR  -->
+                    <Rectangle
+                        Grid.Row="0"
+                        Width="Auto"
+                        Height="2"
+                        Margin="0,15,0,15"
+                        Fill="#EAEAEA" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Text="Kondisi" />
+                    <!--  KONDISI TEXT BOX  -->
+                    <Border
+                        Width="350"
+                        Height="56"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid>
+                            <TextBlock
+                                x:Name="txtCondition"
+                                Grid.Column="1"
+                                Margin="8,5"
+                                Padding="0,8,0,0"
+                                MouseDown="txtCondition_MouseDown"
+                                Style="{StaticResource TextHint}"
+                                Text=" 0-10" />
+                            <TextBox
+                                x:Name="boxCondition"
+                                Grid.Column="1"
+                                MaxWidth="325"
+                                Margin="5"
+                                Padding="0,7,0,0"
+                                PreviewTextInput="ConditionValidationTextBox"
+                                Style="{StaticResource TextBoxGeneral}"
+                                Text="{Binding MinCondition, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="boxCondition_TextChanged"
+                                TextWrapping="NoWrap" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer
+            Grid.Row="1"
+            Panel.ZIndex="-1"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Hidden"
+            Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <Grid>
+                <!--  GADGET LIST WRAP PANEL  -->
+                <ItemsControl
+                    Width="1160"
+                    Margin="100,30,0,0"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding SearchResults}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                                Margin="15"
+                                Command="{Binding DataContext.GadgetSelectedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource ButtonHomeItem}">
+                                <Border Background="White" CornerRadius="10">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="20"
+                                            Direction="270"
+                                            Opacity="0.2"
+                                            ShadowDepth="5"
+                                            Color="Black" />
+                                    </Border.Effect>
+
+                                    <Grid
+                                        Width="200"
+                                        Height="365"
+                                        Background="Transparent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Border
+                                            Grid.Row="0"
+                                            Width="200"
+                                            Height="200"
+                                            CornerRadius="10 10 0 0">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Images[0], Converter={StaticResource ByteArrayToImageConverter}}" Stretch="UniformToFill" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            MaxWidth="190"
+                                            MaxHeight="50"
+                                            Margin="10,10,0,0"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="16"
+                                            FontWeight="Medium"
+                                            Text="{Binding Title}"
+                                            TextWrapping="WrapWithOverflow" />
+
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Margin="10,5,0,0"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Text="{Binding RentalPrice, StringFormat='Rp. {0:N0}/day'}" />
+
+                                        <StackPanel
+                                            Grid.Row="3"
+                                            Margin="13,10,0,0"
+                                            Orientation="Horizontal">
+                                            <Image
+                                                Height="20"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                Source="/Images/LocIcon.png" />
+
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding OwnerCity}" />
+                                        </StackPanel>
+
+
+
+                                        <StackPanel
+                                            Grid.Row="4"
+                                            Margin="10,8,0,10"
+                                            Orientation="Horizontal">
+                                            <Image
+                                                Height="20"
+                                                Margin="0,0,5,5"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Source="/Images/StarIcon.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding GadgetRating, StringFormat='{}{0:F1}'}" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text=" | " />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="#393A41"
+                                                Text="{Binding TimesRented, StringFormat='Rented {0} times'}" />
+                                        </StackPanel>
+
+                                    </Grid>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!--  No Results Message  -->
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="325,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    Text="No gadgets found matching your search criteria."
+                    Visibility="{Binding HasNoResults, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Grid>
+        </ScrollViewer>
+
+
+
+    </Grid>
+</Page>

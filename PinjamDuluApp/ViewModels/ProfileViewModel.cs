@@ -32,6 +32,7 @@ namespace PinjamDuluApp.ViewModels
         private string _editCity;
         private string _editContact;
         private byte[] _editProfilePicture;
+        private string _searchQuery;
 
         public ICommand EditProfileCommand { get; }
         public ICommand SaveChangesCommand { get; }
@@ -42,6 +43,7 @@ namespace PinjamDuluApp.ViewModels
         public ICommand NavigateToHomeCommand { get; }
         public ICommand NavigateToListingCommand { get; }
         public ICommand NavigateToRentalCommand { get; }
+        public ICommand SearchCommand { get; }
 
         public ProfileViewModel(NavigationService navigationService, User user)
         {
@@ -57,6 +59,7 @@ namespace PinjamDuluApp.ViewModels
             NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), user));
             NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
+            SearchCommand = new RelayCommand(ExecuteSearch);
 
             LoadUserProfile(user);
         }
@@ -66,6 +69,16 @@ namespace PinjamDuluApp.ViewModels
             // Replace this with actual logged-in user ID
             var userId = user.UserId; // Assuming you store the current user ID in App
             CurrentUser = await _databaseService.GetUserProfile(userId);
+        }
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+            }
         }
 
         public User CurrentUser
@@ -242,6 +255,22 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
+        private void ExecuteSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+
+                // UNCOMMENT KALO MAU BUAT SEARCH PAGE
+                _navigationService.NavigateTo(typeof(SearchPage), searchParams);
+            }
+        }
+
+        public class SearchParameters
+        {
+            public string Query { get; set; }
+            public User User { get; set; }
+        }
 
     }
 }
