@@ -49,6 +49,7 @@ namespace PinjamDuluApp.ViewModels
         {
             _databaseService = new DatabaseService();
             _navigationService = navigationService;
+            _currentUser = user;
 
             EditProfileCommand = new RelayCommand(OpenEditDialog);
             SaveChangesCommand = new RelayCommand(SaveChanges);
@@ -259,18 +260,11 @@ namespace PinjamDuluApp.ViewModels
         {
             if (!string.IsNullOrWhiteSpace(SearchQuery))
             {
-                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+                var searchParams = new SearchParameters { Query = SearchQuery, User = CurrentUser };
 
                 // UNCOMMENT KALO MAU BUAT SEARCH PAGE
                 _navigationService.NavigateTo(typeof(SearchPage), searchParams);
             }
         }
-
-        public class SearchParameters
-        {
-            public string Query { get; set; }
-            public User User { get; set; }
-        }
-
     }
 }

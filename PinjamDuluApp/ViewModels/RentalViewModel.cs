@@ -7,6 +7,7 @@ using PinjamDuluApp.Helpers;
 using PinjamDuluApp.Models;
 using PinjamDuluApp.Services;
 using PinjamDuluApp.Views;
+using PinjamDuluApp.ViewModels;
 
 namespace PinjamDuluApp.ViewModels
 {
@@ -122,6 +123,7 @@ namespace PinjamDuluApp.ViewModels
         {
             _databaseService = new DatabaseService();
             _navigationService = navigationService;
+            _currentUser = user;
 
             AllRentals = new ObservableCollection<RentalItem>();
             DisplayedRentals = new ObservableCollection<RentalItem>();
@@ -212,12 +214,6 @@ namespace PinjamDuluApp.ViewModels
                 // UNCOMMENT KALO MAU BUAT SEARCH PAGE
                 _navigationService.NavigateTo(typeof(SearchPage), searchParams);
             }
-        }
-
-        public class SearchParameters
-        {
-            public string Query { get; set; }
-            public User User { get; set; }
         }
     }
 }
