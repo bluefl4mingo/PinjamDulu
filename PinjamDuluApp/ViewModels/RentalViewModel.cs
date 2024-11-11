@@ -18,12 +18,24 @@ namespace PinjamDuluApp.ViewModels
         public ObservableCollection<RentalItem> AllRentals { get; set; }
         public ObservableCollection<RentalItem> DisplayedRentals { get; set; }
         private RentalItem _selectedRental;
+        private readonly User _currentUser;
         private int _selectedRating;
         private Visibility _isPopupOverlayVisible = Visibility.Collapsed;
         private Visibility _isOverlayVisible = Visibility.Collapsed;
         private string _reviewText;
+        private string _searchQuery;
         //private bool _isReviewPopupOpen;
         private bool _isCurrentRentalsVisible = true;
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+            }
+        }
 
         public bool IsCurrentRentalsVisible
         {
@@ -104,6 +116,7 @@ namespace PinjamDuluApp.ViewModels
         public ICommand CompleteRentCommand { get; }
         public ICommand SubmitReviewCommand { get; }
         public ICommand CancelReviewCommand { get; }
+        public ICommand SearchCommand { get; }
 
         public RentalViewModel(NavigationService navigationService, User user)
         {
@@ -122,6 +135,7 @@ namespace PinjamDuluApp.ViewModels
             CompleteRentCommand = new RelayCommand<RentalItem>(CompleteRent);
             SubmitReviewCommand = new RelayCommand(SubmitReview);
             CancelReviewCommand = new RelayCommand(CancelReview);
+            SearchCommand = new RelayCommand(ExecuteSearch);
 
             LoadRentals(user);
         }
@@ -187,6 +201,23 @@ namespace PinjamDuluApp.ViewModels
                 IsOverlayVisible = Visibility.Collapsed;
                 UpdateDisplayedRentals();
             }
+        }
+
+        private void ExecuteSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+
+                // UNCOMMENT KALO MAU BUAT SEARCH PAGE
+                _navigationService.NavigateTo(typeof(SearchPage), searchParams);
+            }
+        }
+
+        public class SearchParameters
+        {
+            public string Query { get; set; }
+            public User User { get; set; }
         }
     }
 }

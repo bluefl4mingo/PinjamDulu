@@ -286,6 +286,24 @@
         </Style.Triggers>
     </Style>
 
+    <!--  TRANSPARENT BUTTON NO TRIGGER STYLE  -->
+    <Style x:Key="ButtonTransparentNoTrig" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Gradient}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--  HOME ITEM BUTTON STYLE  -->
     <Style x:Key="ButtonHomeItem" TargetType="Button">
         <Setter Property="Foreground" Value="#1D1D21" />

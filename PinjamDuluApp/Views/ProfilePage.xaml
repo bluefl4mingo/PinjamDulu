@@ -65,18 +65,40 @@
                 BorderBrush="#B6B7BA"
                 BorderThickness="1"
                 CornerRadius="7">
-                <Grid Margin="7">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Column="0"
+                        Command="{Binding SearchCommand}"
+                        Style="{StaticResource ButtonTransparentNoTrig}">
+                        <Image
+                            Grid.Column="0"
+                            Height="35"
+                            Source="/Images/SearchIcon.png" />
+                    </Button>
+
                     <TextBlock
-                        x:Name="textSearch"
-                        Margin="8,5"
-                        Padding="0,2,0,0"
+                        x:Name="txtSearch"
+                        Grid.Column="1"
+                        Margin="2,0"
+                        Padding="0,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="22"
+                        MouseDown="txtSearch_MouseDown" 
                         Style="{StaticResource TextHint}"
                         Text="Cari Gadget" />
                     <TextBox
                         x:Name="boxSearch"
-                        MaxWidth="325"
-                        Margin="5"
-                        Style="{StaticResource TextBoxGeneral}" />
+                        Grid.Column="1"
+                        Padding="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxGeneral}"
+                        Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanged="boxSearch_TextChanged"
+                        TextWrapping="NoWrap" />
                 </Grid>
             </Border>
 
@@ -144,7 +166,7 @@
 
         <!--  BACK BUTTON  -->
         <Button
-            x:Name="btnBackHome"
+            x:Name="btnBack"
             Grid.Row="1"
             Width="90"
             Height="30"
@@ -160,7 +182,7 @@
                     Width="30"
                     Height="3"
                     HorizontalAlignment="Left"
-                    Fill="{Binding ElementName=btnBackHome, Path=Foreground}"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
                     RadiusX="1"
                     RadiusY="1" />
                 <TextBlock HorizontalAlignment="Right" Text="Back" />
@@ -483,10 +505,9 @@
                                 <TextBox
                                     Grid.ColumnSpan="2"
                                     Margin="5,5,5,5"
-                                    Style="{StaticResource TextBoxGeneral2}"
-                                    Text="{Binding EditContact, UpdateSourceTrigger=PropertyChanged}"
                                     PreviewTextInput="TextBox_PreviewTextInput"
-                                    />
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding EditContact, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
 

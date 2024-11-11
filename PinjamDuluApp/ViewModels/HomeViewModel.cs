@@ -94,7 +94,7 @@ namespace PinjamDuluApp.ViewModels
                 var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
 
                 // UNCOMMENT KALO MAU BUAT SEARCH PAGE
-                //_navigationService.NavigateTo(typeof(SearchPage), searchParams);
+                _navigationService.NavigateTo(typeof(SearchPage), searchParams);
             }
         }
 

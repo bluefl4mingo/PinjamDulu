@@ -26,7 +26,7 @@ namespace PinjamDuluApp.ViewModels
         public decimal TotalPrice => _totalPrice;
 
         public ICommand PayCommand { get; }
-        public ICommand goBack { get; }
+        public ICommand BackCommand { get; }
 
         public StripePaymentViewModel(NavigationService navigationService, User user, PaymentParameters rentData)
         {
@@ -34,7 +34,7 @@ namespace PinjamDuluApp.ViewModels
             _navigationService = navigationService;
 
             PayCommand = new RelayCommand(async () => await ProcessPaymentAsync());
-            goBack = new RelayCommand(() => _navigationService.GoBack());
+            BackCommand = new RelayCommand(() => _navigationService.GoBack());
 
             _currentUser = user;
             _gadgetId = rentData.GadgetId;

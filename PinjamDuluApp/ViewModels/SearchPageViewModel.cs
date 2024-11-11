@@ -124,6 +124,10 @@ namespace PinjamDuluApp.ViewModels
         public ICommand GadgetSelectedCommand { get; }
         public ICommand ClearFiltersCommand { get; }
         public ICommand goBack { get; }
+        public ICommand NavigateToHomeCommand { get; }
+        public ICommand NavigateToListingCommand { get; }
+        public ICommand NavigateToRentalCommand { get; }
+        public ICommand NavigateToProfileCommand { get; }
 
         public SearchPageViewModel(NavigationService navigationService, SearchParameters searchParams)
         {
@@ -136,6 +140,10 @@ namespace PinjamDuluApp.ViewModels
             GadgetSelectedCommand = new RelayCommand<Gadget>(OnGadgetSelected);
             ClearFiltersCommand = new RelayCommand(ClearFilters);
             goBack = new RelayCommand(() => _navigationService.GoBack());
+            NavigateToHomeCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(HomePage), searchParams.User));
+            NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), searchParams.User));
+            NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), searchParams.User));
+            NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), searchParams.User));
 
             // Initial search with query
             ExecuteSearch();

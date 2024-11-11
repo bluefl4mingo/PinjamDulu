@@ -28,6 +28,7 @@
     <None Remove="Images\Star8.png" />
     <None Remove="Images\StarIcon.png" />
     <None Remove="Images\UserCircle.png" />
+    <None Remove="Images\VisaLogo.png" />
     <None Remove="Images\XCircle.png" />
   </ItemGroup>
 
@@ -58,6 +59,7 @@
     <Resource Include="Images\Star8.png" />
     <Resource Include="Images\StarIcon.png" />
     <Resource Include="Images\UserCircle.png" />
+    <Resource Include="Images\VisaLogo.png" />
     <Resource Include="Images\XCircle.png" />
   </ItemGroup>
 

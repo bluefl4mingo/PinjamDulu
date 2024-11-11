@@ -1,0 +1,306 @@
+﻿<Page
+    x:Class="PinjamDuluApp.Views.StripePayment"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PinjamDuluApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="StripePayment"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+        </Style>
+
+        <Style x:Key="AttributeText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1D1D21" />
+        </Style>
+
+        <Style x:Key="DataText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="/Fonts/#Poppins" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#747680" />
+        </Style>
+    </Page.Resources>
+
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  PAY NOW BUTTON  -->
+        <Button
+            x:Name="btnBack"
+            Grid.Column="0"
+            Width="200"
+            Height="56"
+            Margin="50,40,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{Binding BackCommand}"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Style="{StaticResource ButtonGeneral}">
+            <Grid Width="120">
+                <TextBlock HorizontalAlignment="Right" Text="Kembali" />
+                <Rectangle
+                    Width="25"
+                    Height="3"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1" />
+                <Rectangle
+                    Width="12"
+                    Height="3"
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1">
+                    <Rectangle.LayoutTransform>
+                        <RotateTransform Angle="-45" />
+                    </Rectangle.LayoutTransform>
+                </Rectangle>
+                <Rectangle
+                    Width="12"
+                    Height="3"
+                    Margin="0,8,0,0"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1">
+                    <Rectangle.LayoutTransform>
+                        <RotateTransform Angle="45" />
+                    </Rectangle.LayoutTransform>
+                </Rectangle>
+            </Grid>
+        </Button>
+
+        <!--  POPUP WINDOW TITLE  -->
+        <TextBlock
+            Grid.Column="0"
+            Margin="0,180,270,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            FontSize="28"
+            FontWeight="Bold"
+            Text="Informasi Pembayaran" />
+
+        <Border
+            Grid.Column="0"
+            Width="620"
+            Height="600"
+            HorizontalAlignment="Right"
+            Background="White"
+            BorderBrush="#B6B7BA"
+            BorderThickness="1"
+            CornerRadius="20">
+            <Grid>
+                <!--  TOTAL HARGA  -->
+                <TextBlock
+                    Margin="70,50,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    Text="Total Harga:   " />
+                <TextBlock
+                    Width="220"
+                    Margin="220,45,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    FontSize="26"
+                    FontWeight="Bold"
+                    Foreground="{StaticResource Gradient}"
+                    Text="{Binding TotalPrice, StringFormat='Rp{0:#,#}-,'}"
+                    TextAlignment="Left" />
+
+                <StackPanel
+                    Grid.Column="0"
+                    Width="500"
+                    Margin="20,130,0,0"
+                    VerticalAlignment="Top">
+                    <!--  CARD INFORMATION  -->
+                    <TextBlock
+                        Margin="0,0,0,3"
+                        FontSize="16"
+                        Text="Card Information" />
+                    <Border
+                        Width="Auto"
+                        Height="56"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid Margin="7,12,7,0">
+                            <TextBox
+                                PreviewTextInput="NumberOnlyPreviewTextInput"
+                                Style="{StaticResource TextBoxGeneral2}"
+                                Text="{Binding CardNumber, UpdateSourceTrigger=PropertyChanged}" />
+                            <Image
+                                Height="30"
+                                Margin="0,0,15,12"
+                                HorizontalAlignment="Right"
+                                Source="/Images/VisaLogo.png" />
+                        </Grid>
+                    </Border>
+
+                    <Grid Height="95" Margin="0,10,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  EXPIRY DATE  -->
+                        <TextBlock
+                            Margin="0,10,0,3"
+                            FontSize="16"
+                            Text="Expiry" />
+                        <Border
+                            Width="240"
+                            Height="56"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="7">
+                            <Grid Margin="7,12,7,0">
+                                <TextBox
+                                    PreviewTextInput="NumberOnlyPreviewTextInput"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding CardExpiry, UpdateSourceTrigger=PropertyChanged}"
+                                    TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+
+                        <!--  CVC 3 DIGIT  -->
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="10,10,0,3"
+                            FontSize="16"
+                            Text="CVC" />
+                        <Border
+                            Grid.Column="1"
+                            Width="240"
+                            Height="56"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            BorderBrush="#B6B7BA"
+                            BorderThickness="1"
+                            CornerRadius="7">
+                            <Grid Margin="7,12,7,0">
+                                <TextBox
+                                    PreviewTextInput="NumberOnlyPreviewTextInput"
+                                    Style="{StaticResource TextBoxGeneral2}"
+                                    Text="{Binding CardCVC, UpdateSourceTrigger=PropertyChanged}"
+                                    TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!--  CARD HOLDER NAME  -->
+                    <TextBlock
+                        Margin="0,30,0,3"
+                        FontSize="16"
+                        Text="Cardholder Name" />
+                    <Border
+                        Width="Auto"
+                        Height="56"
+                        BorderBrush="#B6B7BA"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <Grid Margin="7,12,7,0">
+                            <TextBox
+                                Grid.ColumnSpan="2"
+                                Style="{StaticResource TextBoxGeneral2}"
+                                Text="{Binding CardholderName, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+
+
+
+                <!--  ERROR MESSAGE  -->
+                <TextBlock
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,130"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    FontSize="14"
+                    Foreground="Red"
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="Wrap" />
+
+                <!--  PAY NOW BUTTON  -->
+                <Button
+                    Grid.ColumnSpan="2"
+                    Width="500"
+                    Height="50"
+                    Margin="0,0,0,50"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding PayCommand}"
+                    Content="Bayar Sekarang"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Style="{StaticResource GradientButton}" />
+            </Grid>
+        </Border>
+
+        <Border
+            Grid.Column="1"
+            Width="515"
+            Height="280"
+            Margin="50,0,0,285"
+            Padding="30"
+            HorizontalAlignment="Left"
+            Background="#EBEBEB"
+            BorderThickness="0"
+            CornerRadius="20">
+            <Grid>
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,0"
+                        FontSize="24"
+                        FontWeight="SemiBold"
+                        Text="Test Mode" />
+                    <TextBlock
+                        Margin="0,15,0,0"
+                        FontSize="16"
+                        FontWeight="Light"
+                        Text="This payment form is in test mode. You can use the following test card:"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,20,0,0"
+                        FontSize="16"
+                        FontWeight="Light"
+                        Text="• 4242 4242 4242 4242 (Success Payment)"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        FontSize="16"
+                        FontWeight="Light"
+                        Text="• Any future expiry date (MM/YY)"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        FontSize="16"
+                        FontWeight="Light"
+                        Text="• Any 3 digits for CVC"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</Page>
