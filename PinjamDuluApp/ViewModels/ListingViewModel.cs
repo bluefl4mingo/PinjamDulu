@@ -339,11 +339,5 @@ namespace PinjamDuluApp.ViewModels
                 _navigationService.NavigateTo(typeof(SearchPage), searchParams);
             }
         }
-
-        public class SearchParameters
-        {
-            public string Query { get; set; }
-            public User User { get; set; }
-        }
     }
 }

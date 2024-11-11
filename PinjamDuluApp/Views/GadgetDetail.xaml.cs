@@ -27,5 +27,22 @@ namespace PinjamDuluApp.Views
             DataContext = new GadgetDetailViewModel(MainWindow.NavigationService, user, gadget);
             InitializeComponent();
         }
+
+        private void boxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(boxSearch.Text) && boxSearch.Text.Length > 0)
+            {
+                txtSearch.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                txtSearch.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void txtSearch_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            boxSearch.Focus();
+        }
     }
 }

@@ -19,6 +19,17 @@ namespace PinjamDuluApp.ViewModels
         private readonly DatabaseService _databaseService;
         private readonly NavigationService _navigationService;
         private Gadget _gadget;
+        private readonly User _currentUser;
+        private string _searchQuery;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+            }
+        }
         public Gadget Gadget
         {
             get => _gadget;
@@ -59,11 +70,13 @@ namespace PinjamDuluApp.ViewModels
         public ICommand NavigateToListingCommand { get; }
         public ICommand NavigateToRentalCommand { get; }
         public ICommand NavigateToProfileCommand { get; }
+        public ICommand SearchCommand { get; }
 
         public GadgetDetailViewModel(NavigationService navigationService, User user, Gadget gadget)
         {
             _databaseService = new DatabaseService();
             _navigationService = navigationService;
+            _currentUser = user;
 
             // Set the gadget immediately from the parameter
             Gadget = gadget;
@@ -76,6 +89,7 @@ namespace PinjamDuluApp.ViewModels
             NavigateToListingCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ListingPage), user));
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
             NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
+            SearchCommand = new RelayCommand(ExecuteSearch);
 
             // Load additional details (reviews) asynchronously
             LoadReviewsAsync(gadget.GadgetId);
@@ -155,6 +169,17 @@ namespace PinjamDuluApp.ViewModels
                     MessageBoxImage.Error
                 );
                 System.Diagnostics.Debug.WriteLine($"Rental initiation error: {ex.Message}");
+            }
+        }
+
+        private void ExecuteSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                var searchParams = new SearchParameters { Query = SearchQuery, User = _currentUser };
+
+                // UNCOMMENT KALO MAU BUAT SEARCH PAGE
+                _navigationService.NavigateTo(typeof(SearchPage), searchParams);
             }
         }
     }
