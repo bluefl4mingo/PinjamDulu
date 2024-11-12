@@ -230,7 +230,10 @@
             </StackPanel>
 
             <!--  RENTAL LIST CONTENT  -->
-            <ScrollViewer Grid.Column="1" Margin="10,100,10,10">
+            <ScrollViewer
+                Grid.Column="1"
+                Margin="10,100,10,10"
+                Style="{StaticResource ScrollviewerStyle}">
                 <ItemsControl ItemsSource="{Binding DisplayedRentals}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -539,9 +542,9 @@
                             Background="Transparent"
                             FontFamily="/Fonts/#Poppins"
                             FontSize="16"
-                            Style="{StaticResource ComboBoxTheme}"
                             ItemsSource="{Binding RatingOptions}"
-                            SelectedItem="{Binding SelectedRating}" />
+                            SelectedItem="{Binding SelectedRating}"
+                            Style="{StaticResource ComboBoxTheme}" />
 
                         <!--  REVIEW TEXT  -->
                         <TextBlock

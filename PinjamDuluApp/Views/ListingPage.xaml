@@ -239,7 +239,10 @@
             </StackPanel>
 
             <!--  LISTING GADGET CONTENT  -->
-            <ScrollViewer Grid.Column="1" Margin="10,100,10,10">
+            <ScrollViewer
+                Grid.Column="1"
+                Margin="10,100,10,10"
+                Style="{StaticResource ScrollviewerStyle}">
                 <ItemsControl>
                     <ItemsControl.ItemsSource>
                         <MultiBinding Converter="{StaticResource BoolToGadgetListMultiConverter}">
@@ -564,10 +567,10 @@
                         <ComboBox
                             Width="380"
                             Height="50"
-                            FontSize="16"
                             HorizontalAlignment="Left"
                             Background="Transparent"
                             FontFamily="/Fonts/#Poppins"
+                            FontSize="16"
                             ItemsSource="{Binding CategoryOptions}"
                             SelectedItem="{Binding SelectedGadget.Category}"
                             Style="{StaticResource ComboBoxTheme}" />

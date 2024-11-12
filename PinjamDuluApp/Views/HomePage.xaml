@@ -148,9 +148,9 @@
 
         <ScrollViewer
             Grid.Row="1"
-            Background="{StaticResource Gradient}"
+            Style="{StaticResource ScrollviewerStyle}"
             HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Hidden">
+            VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="200" />
@@ -158,7 +158,7 @@
                 </Grid.RowDefinitions>
 
                 <!--  HOME SLOGAN  -->
-                <Grid Grid.Row="0" Background="White" />
+                <Grid Grid.Row="1" Background="{StaticResource Gradient}" />
                 <TextBlock
                     Grid.Row="0"
                     Width="730"
