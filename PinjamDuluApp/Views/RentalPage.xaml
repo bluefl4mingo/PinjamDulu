@@ -202,6 +202,7 @@
                     Width="205"
                     Height="56"
                     Margin="0,0,0,0"
+                    Command="{Binding ShowCurrentRentalsCommand}"
                     FontWeight="SemiBold"
                     GroupName="RentPageBtn"
                     IsChecked="True"
@@ -216,6 +217,7 @@
                     Width="205"
                     Height="56"
                     Margin="30,0,0,0"
+                    Command="{Binding ShowRentalHistoryCommand}"
                     FontWeight="SemiBold"
                     GroupName="RentPageBtn"
                     Style="{StaticResource RadioButton}">
@@ -228,7 +230,10 @@
             </StackPanel>
 
             <!--  RENTAL LIST CONTENT  -->
-            <ScrollViewer Grid.Column="1" Margin="10,100,10,10">
+            <ScrollViewer
+                Grid.Column="1"
+                Margin="10,100,10,10"
+                Style="{StaticResource ScrollviewerStyle}">
                 <ItemsControl ItemsSource="{Binding DisplayedRentals}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -390,7 +395,7 @@
                                             <TextBlock HorizontalAlignment="Left" Text="Selesai Rental" />
                                             <Rectangle
                                                 Width="10"
-                                                Height="5"
+                                                Height="4"
                                                 Margin="0,2,14,0"
                                                 HorizontalAlignment="Right"
                                                 Fill="{Binding ElementName=btnCompleteRent, Path=Foreground}"
@@ -402,7 +407,7 @@
                                             </Rectangle>
                                             <Rectangle
                                                 Width="20"
-                                                Height="5"
+                                                Height="4"
                                                 Margin="0,2,2,5"
                                                 HorizontalAlignment="Right"
                                                 Fill="{Binding ElementName=btnCompleteRent, Path=Foreground}"
@@ -455,7 +460,7 @@
                                                     FontSize="14"
                                                     FontWeight="Regular"
                                                     Foreground="#747680"
-                                                    Text="10/12/2024" />
+                                                    Text="{Binding Review.ReviewDate}" />
                                             </StackPanel>
 
                                             <TextBlock
@@ -531,14 +536,19 @@
                             FontSize="16"
                             Text="Rating" />
                         <ComboBox
-                            Width="100"
+                            Width="150"
+                            Height="50"
                             HorizontalAlignment="Left"
+                            Background="Transparent"
+                            FontFamily="/Fonts/#Poppins"
+                            FontSize="16"
                             ItemsSource="{Binding RatingOptions}"
-                            SelectedItem="{Binding SelectedRating}" />
+                            SelectedItem="{Binding SelectedRating}"
+                            Style="{StaticResource ComboBoxTheme}" />
 
                         <!--  REVIEW TEXT  -->
                         <TextBlock
-                            Margin="0,10,0,3"
+                            Margin="0,15,0,3"
                             FontSize="16"
                             Text="Teks Ulasan" />
                         <Border
@@ -561,7 +571,7 @@
                             Grid.ColumnSpan="2"
                             Width="330"
                             Height="50"
-                            Margin="0,50,0,0"
+                            Margin="0,40,0,0"
                             VerticalAlignment="Bottom"
                             Command="{Binding SubmitReviewCommand}"
                             Content="Simpan"

@@ -153,7 +153,7 @@
         <!--  FILTER GRID  -->
         <Border
             Grid.Row="1"
-            Width="400"
+            Width="405"
             Height="830"
             Margin="0,0,100,0"
             Padding="25"
@@ -171,37 +171,51 @@
                         Text="Kategori Gadget" />
                     <RadioButton
                         Margin="5"
-                        Content="All"
+                        VerticalContentAlignment="Center"
+                        Content=" All"
+                        FontSize="16"
                         IsChecked="{Binding SelectedCategory, Converter={StaticResource NullValueToBooleanConverter}}" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Handphone"
+                        Content=" Handphone"
+                        FontSize="16"
                         Tag="handphone" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Tablet"
+                        Content=" Tablet"
+                        FontSize="16"
                         Tag="tablet" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Laptop"
+                        Content=" Laptop"
+                        FontSize="16"
                         Tag="laptop" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Smartwatch"
+                        Content=" Smartwatch"
+                        FontSize="16"
                         Tag="smartwatch" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Headphone"
+                        Content=" Headphone"
+                        FontSize="16"
                         Tag="Camera" />
                     <RadioButton
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Checked="OnCategoryChecked"
-                        Content="Drone"
+                        Content=" Drone"
+                        FontSize="16"
                         Tag="Drone" />
 
                     <!--  LINE SEPARATOR  -->
@@ -403,6 +417,7 @@
             Grid.Row="1"
             Panel.ZIndex="-1"
             HorizontalScrollBarVisibility="Disabled"
+            Style="{StaticResource ScrollviewerStyle}"
             VerticalScrollBarVisibility="Hidden"
             Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
             <Grid>
