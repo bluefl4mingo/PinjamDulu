@@ -329,7 +329,7 @@
                                         Margin="50,0,0,70"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        Command="{Binding RentCommand}"
+                                        Command="{Binding GadgetSelectedCommand}"
                                         FontSize="14"
                                         FontWeight="Regular"
                                         Style="{StaticResource ButtonTransparent}">

@@ -118,6 +118,7 @@ namespace PinjamDuluApp.ViewModels
         public ICommand SubmitReviewCommand { get; }
         public ICommand CancelReviewCommand { get; }
         public ICommand SearchCommand { get; }
+        public ICommand GadgetSelectedCommand { get; }
 
         public RentalViewModel(NavigationService navigationService, User user)
         {
@@ -138,6 +139,7 @@ namespace PinjamDuluApp.ViewModels
             SubmitReviewCommand = new RelayCommand(SubmitReview);
             CancelReviewCommand = new RelayCommand(CancelReview);
             SearchCommand = new RelayCommand(ExecuteSearch);
+            GadgetSelectedCommand = new RelayCommand<Gadget>(OnGadgetSelected);
 
             LoadRentals(user);
         }
@@ -213,6 +215,15 @@ namespace PinjamDuluApp.ViewModels
 
                 // UNCOMMENT KALO MAU BUAT SEARCH PAGE
                 _navigationService.NavigateTo(typeof(SearchPage), searchParams);
+            }
+        }
+
+        private void OnGadgetSelected(Gadget gadget)
+        {
+            if (gadget != null)
+            {
+                var navigationParams = new NavigationParameters(_currentUser, gadget);
+                _navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
             }
         }
     }
