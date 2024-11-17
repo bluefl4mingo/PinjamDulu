@@ -133,7 +133,8 @@ namespace PinjamDuluApp.ViewModels
 
                 if (await _databaseService.CreateUser(user, _password))
                 {
-                    _navigationService.NavigateTo(typeof(HomePage), user);
+                    System.Windows.MessageBox.Show($"Akun berhasil dibuat. Silakan login!", "Success", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                    _navigationService.NavigateTo(typeof(LoginPage));
                 }
                 else
                 {
