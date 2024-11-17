@@ -126,7 +126,7 @@ namespace PinjamDuluApp.ViewModels
             try
             {
                 // Check if the selected rental end date is before the current date
-                if (RentEndDate < DateTime.Today)
+                if (RentEndDate <= DateTime.Today)
                 {
                     MessageBox.Show(
                         "You cannot select a rental end date that is today's or before today's date.",

@@ -265,6 +265,7 @@
                                 x:Name="boxContact"
                                 MaxWidth="325"
                                 Margin="5"
+                                PreviewTextInput="TextBox_PreviewTextInput"
                                 Style="{StaticResource TextBoxGeneral}"
                                 Text="{Binding Contact, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="boxContact_TextChanged" />
