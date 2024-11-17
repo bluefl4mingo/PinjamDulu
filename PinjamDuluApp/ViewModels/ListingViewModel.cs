@@ -60,6 +60,8 @@ namespace PinjamDuluApp.ViewModels
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
             NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
             SearchCommand = new RelayCommand(ExecuteSearch);
+            GadgetSelectedCommand = new RelayCommand<Gadget>(OnGadgetSelected);
+
         }
 
         public string SearchQuery
@@ -163,6 +165,16 @@ namespace PinjamDuluApp.ViewModels
         public ICommand NavigateToProfileCommand { get; }
         public ICommand NavigateToHomeCommand { get; }
         public ICommand SearchCommand { get; }
+        public ICommand GadgetSelectedCommand { get; }
+
+        private void OnGadgetSelected(Gadget gadget)
+        {
+            if (gadget != null)
+            {
+                var navigationParams = new NavigationParameters(_currentUser, gadget);
+                _navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
+            }
+        }
 
         private async void LoadGadgets()
         {

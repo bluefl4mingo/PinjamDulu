@@ -329,7 +329,8 @@
                                         Margin="50,0,0,70"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        Command="{Binding GadgetSelectedCommand}"
+                                        Command="{Binding DataContext.GadgetSelectedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
                                         FontSize="14"
                                         FontWeight="Regular"
                                         Style="{StaticResource ButtonTransparent}">
