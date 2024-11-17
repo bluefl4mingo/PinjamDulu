@@ -130,17 +130,32 @@ namespace PinjamDuluApp.Services
                 await conn.OpenAsync();
                 var gadgets = new List<Gadget>();
                 var sql = @"
-                            SELECT g.*, 
-                                   gi.image[1] as first_image,
-                                   COUNT(DISTINCT b.booking_id) as times_rented,
-                                   u.city as owner_city
-                            FROM public.""Gadget"" g
-                            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
-                            LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
-                            LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
-                            GROUP BY g.gadget_id, gi.image[1], u.city
-                            ORDER BY RANDOM()
-                            LIMIT @count";
+            SELECT g.gadget_id,
+                   g.owner_id,
+                   g.title,
+                   g.description,
+                   g.category,
+                   g.brand,
+                   g.condition_metric,
+                   COALESCE(AVG(r.rating), 0) as gadget_rating,
+                   g.rental_price,
+                   g.availability,
+                   g.availability_date,
+                   gi.image[1] as first_image,
+                   COUNT(DISTINCT b.booking_id) as times_rented,
+                   u.city as owner_city,
+                   u.full_name as owner_name
+            FROM public.""Gadget"" g
+            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+            LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+            LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
+            LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
+            GROUP BY g.gadget_id, 
+                     gi.image[1],
+                     u.city,
+                     u.full_name
+            ORDER BY RANDOM()
+            LIMIT @count";
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("count", count);
@@ -163,7 +178,8 @@ namespace PinjamDuluApp.Services
                                 AvailabilityDate = reader.IsDBNull(reader.GetOrdinal("availability_date")) ? null : reader.GetDateTime(reader.GetOrdinal("availability_date")),
                                 Images = reader.IsDBNull(reader.GetOrdinal("first_image")) ? null : new[] { (byte[])reader["first_image"] },
                                 TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented")),
-                                OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? "Unknown" : reader.GetString(reader.GetOrdinal("owner_city"))
+                                OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? "Unknown" : reader.GetString(reader.GetOrdinal("owner_city")),
+                                OwnerName = reader.IsDBNull(reader.GetOrdinal("owner_name")) ? "Unknown" : reader.GetString(reader.GetOrdinal("owner_name"))
                             };
                             gadgets.Add(gadget);
                         }
@@ -251,16 +267,32 @@ namespace PinjamDuluApp.Services
                 await conn.OpenAsync();
                 var rentals = new List<RentalItem>();
                 var sql = @"
-            SELECT b.booking_id, b.rental_start_date, b.rental_end_date,
-                   g.gadget_id, g.title, g.description, g.category, g.brand, g.rental_price,
-                   u.full_name AS owner_name,
-                   r.review_id, r.rating, r.review_text, r.review_date,
-                   gi.image AS gadget_images
+            WITH GadgetStats AS (
+                SELECT 
+                    g.gadget_id,
+                    COALESCE(AVG(r.rating::decimal), 0) as avg_rating,
+                    COUNT(DISTINCT b.booking_id) as times_rented
+                FROM public.""Gadget"" g
+                LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+                LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
+                GROUP BY g.gadget_id
+            )
+            SELECT 
+                b.booking_id, b.rental_start_date, b.rental_end_date,
+                g.gadget_id, g.title, g.description, g.category, g.brand, 
+                g.rental_price, g.condition_metric, g.availability_date,
+                u.full_name AS owner_name,
+                u.city AS owner_city,
+                r.review_id, r.rating, r.review_text, r.review_date,
+                gi.image AS gadget_images,
+                gs.avg_rating as gadget_rating,
+                gs.times_rented
             FROM public.""Booking"" b
             JOIN public.""Gadget"" g ON b.gadget_id = g.gadget_id
             JOIN public.""User"" u ON g.owner_id = u.user_id
             LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
             LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+            LEFT JOIN GadgetStats gs ON g.gadget_id = gs.gadget_id
             WHERE b.borrower_id = @userId
             ORDER BY b.rental_start_date DESC";
 
@@ -284,13 +316,21 @@ namespace PinjamDuluApp.Services
                                     Category = reader.GetString(reader.GetOrdinal("category")),
                                     Brand = reader.GetString(reader.GetOrdinal("brand")),
                                     RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
+                                    ConditionMetric = reader.GetInt32(reader.GetOrdinal("condition_metric")),
+                                    AvailabilityDate = reader.IsDBNull(reader.GetOrdinal("availability_date"))
+                                        ? null
+                                        : reader.GetDateTime(reader.GetOrdinal("availability_date")),
                                     Images = reader.IsDBNull(reader.GetOrdinal("gadget_images"))
                                         ? null
-                                        : (byte[][])reader["gadget_images"]
+                                        : (byte[][])reader["gadget_images"],
+                                    OwnerName = reader.GetString(reader.GetOrdinal("owner_name")),
+                                    OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city"))
+                                        ? "Unknown"
+                                        : reader.GetString(reader.GetOrdinal("owner_city")),
+                                    GadgetRating = reader.GetFloat(reader.GetOrdinal("gadget_rating")),
+                                    TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented"))
                                 },
-                                OwnerName = reader.GetString(reader.GetOrdinal("owner_name"))
                             };
-
                             if (!reader.IsDBNull(reader.GetOrdinal("review_id")))
                             {
                                 rentalItem.Review = new Review
@@ -301,7 +341,6 @@ namespace PinjamDuluApp.Services
                                     ReviewDate = reader.GetDateTime(reader.GetOrdinal("review_date"))
                                 };
                             }
-
                             rentals.Add(rentalItem);
                         }
                     }
@@ -332,7 +371,7 @@ namespace PinjamDuluApp.Services
             }
         }
 
-        
+
 
         //--------------------------- LISTING GADGET SERVICES ---------------------------//
         public async Task<List<Gadget>> GetUserGadgets(Guid userId)
@@ -341,36 +380,52 @@ namespace PinjamDuluApp.Services
             {
                 await conn.OpenAsync();
                 var gadgets = new List<Gadget>();
-
                 var sql = @"
-                            SELECT g.*, 
-                                   gi.image[1] as first_image,
-                                   COUNT(DISTINCT b.booking_id) as times_rented,
-                                   current_booking.borrower_username,
-                                   current_booking.rental_start_date,
-                                   current_booking.rental_end_date
-                            FROM public.""Gadget"" g
-                            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
-                            LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
-                            LEFT JOIN (
-                                SELECT b.gadget_id, 
-                                       u.username as borrower_username,
-                                       b.rental_start_date,
-                                       b.rental_end_date
-                                FROM public.""Booking"" b
-                                JOIN public.""User"" u ON b.borrower_id = u.user_id
-                                WHERE CURRENT_DATE BETWEEN b.rental_start_date AND b.rental_end_date
-                            ) current_booking ON g.gadget_id = current_booking.gadget_id
-                            WHERE g.owner_id = @userId
-                            GROUP BY g.gadget_id, gi.image[1], 
-                                     current_booking.borrower_username,
-                                     current_booking.rental_start_date,
-                                     current_booking.rental_end_date";
+            WITH GadgetStats AS (
+                SELECT 
+                    g.gadget_id,
+                    COALESCE(ROUND(AVG(CAST(r.rating AS DECIMAL)), 1), 0) as avg_rating,
+                    COUNT(DISTINCT b.booking_id) as total_rentals
+                FROM public.""Gadget"" g
+                LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+                LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
+                GROUP BY g.gadget_id
+            )
+            SELECT g.*, 
+                   gi.image[1] as first_image,
+                   gs.total_rentals as times_rented,
+                   gs.avg_rating as calculated_rating,
+                   current_booking.borrower_username,
+                   current_booking.rental_start_date,
+                   current_booking.rental_end_date,
+                   owner.city as owner_city,
+                   owner.full_name as owner_name
+            FROM public.""Gadget"" g
+            LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+            LEFT JOIN GadgetStats gs ON g.gadget_id = gs.gadget_id
+            LEFT JOIN public.""User"" owner ON g.owner_id = owner.user_id
+            LEFT JOIN (
+                SELECT b.gadget_id, 
+                       u.username as borrower_username,
+                       b.rental_start_date,
+                       b.rental_end_date
+                FROM public.""Booking"" b
+                JOIN public.""User"" u ON b.borrower_id = u.user_id
+                WHERE CURRENT_DATE BETWEEN b.rental_start_date AND b.rental_end_date
+            ) current_booking ON g.gadget_id = current_booking.gadget_id
+            WHERE g.owner_id = @userId
+            GROUP BY g.gadget_id, gi.image[1], 
+                     gs.total_rentals,
+                     gs.avg_rating,
+                     current_booking.borrower_username,
+                     current_booking.rental_start_date,
+                     current_booking.rental_end_date,
+                     owner.city,
+                     owner.full_name";
 
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("userId", userId);
-
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -384,7 +439,7 @@ namespace PinjamDuluApp.Services
                                 Category = reader.GetString(reader.GetOrdinal("category")),
                                 Brand = reader.GetString(reader.GetOrdinal("brand")),
                                 ConditionMetric = reader.GetInt32(reader.GetOrdinal("condition_metric")),
-                                GadgetRating = reader.GetFloat(reader.GetOrdinal("gadget_rating")),
+                                GadgetRating = reader.GetFloat(reader.GetOrdinal("calculated_rating")),
                                 RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
                                 Availability = reader.GetBoolean(reader.GetOrdinal("availability")),
                                 AvailabilityDate = reader.IsDBNull(reader.GetOrdinal("availability_date")) ? null : reader.GetDateTime(reader.GetOrdinal("availability_date")),
@@ -392,7 +447,9 @@ namespace PinjamDuluApp.Services
                                 TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented")),
                                 CurrentRenterUsername = reader.IsDBNull(reader.GetOrdinal("borrower_username")) ? null : reader.GetString(reader.GetOrdinal("borrower_username")),
                                 CurrentRentalStart = reader.IsDBNull(reader.GetOrdinal("rental_start_date")) ? null : reader.GetDateTime(reader.GetOrdinal("rental_start_date")),
-                                CurrentRentalEnd = reader.IsDBNull(reader.GetOrdinal("rental_end_date")) ? null : reader.GetDateTime(reader.GetOrdinal("rental_end_date"))
+                                CurrentRentalEnd = reader.IsDBNull(reader.GetOrdinal("rental_end_date")) ? null : reader.GetDateTime(reader.GetOrdinal("rental_end_date")),
+                                OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? "Unknown" : reader.GetString(reader.GetOrdinal("owner_city")),
+                                OwnerName = reader.IsDBNull(reader.GetOrdinal("owner_name")) ? "Unknown" : reader.GetString(reader.GetOrdinal("owner_name"))
                             };
                             gadgets.Add(gadget);
                         }
@@ -751,25 +808,35 @@ namespace PinjamDuluApp.Services
                 searchQuery = searchQuery?.Trim() ?? "";
 
                 var sql = @"
-                        SELECT DISTINCT g.*, 
-                               gi.image[1] as first_image,
-                               COUNT(DISTINCT b.booking_id) as times_rented,
-                               u.city as owner_city
-                        FROM public.""Gadget"" g
-                        LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
-                        LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
-                        LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
-                        WHERE (@searchQuery = '' OR ( -- Only apply search if there's a search query
-                            LOWER(g.title) LIKE LOWER(@searchQuery)
-                            OR LOWER(g.description) LIKE LOWER(@searchQuery)
-                            OR LOWER(g.brand) LIKE LOWER(@searchQuery)
-                        ))
-                        AND (@category IS NULL OR LOWER(g.category) = LOWER(@category))
-                        AND (@minPrice IS NULL OR g.rental_price >= @minPrice)
-                        AND (@maxPrice IS NULL OR g.rental_price <= @maxPrice)
-                        AND (@minRating IS NULL OR g.gadget_rating >= @minRating)
-                        AND (@minCondition IS NULL OR g.condition_metric >= @minCondition)
-                        GROUP BY g.gadget_id, gi.image[1], u.city";
+                WITH gadget_ratings AS (
+                    SELECT b.gadget_id,
+                           COALESCE(AVG(r.rating)::float, 0) as avg_rating
+                    FROM public.""Booking"" b
+                    LEFT JOIN public.""Review"" r ON b.booking_id = r.booking_id
+                    GROUP BY b.gadget_id
+                )
+                SELECT DISTINCT g.*,
+                       gi.image[1] as first_image,
+                       COUNT(DISTINCT b.booking_id) as times_rented,
+                       u.city as owner_city,
+                       u.full_name as owner_name,
+                       COALESCE(gr.avg_rating, 0) as calculated_rating
+                FROM public.""Gadget"" g
+                LEFT JOIN public.""GadgetImages"" gi ON g.gadget_id = gi.gadget_id
+                LEFT JOIN public.""Booking"" b ON g.gadget_id = b.gadget_id
+                LEFT JOIN public.""User"" u ON g.owner_id = u.user_id
+                LEFT JOIN gadget_ratings gr ON g.gadget_id = gr.gadget_id
+                WHERE (@searchQuery = '' OR (
+                    LOWER(g.title) LIKE LOWER(@searchQuery)
+                    OR LOWER(g.description) LIKE LOWER(@searchQuery)
+                    OR LOWER(g.brand) LIKE LOWER(@searchQuery)
+                ))
+                AND (@category IS NULL OR LOWER(g.category) = LOWER(@category))
+                AND (@minPrice IS NULL OR g.rental_price >= @minPrice)
+                AND (@maxPrice IS NULL OR g.rental_price <= @maxPrice)
+                AND (@minCondition IS NULL OR g.condition_metric >= @minCondition)
+                GROUP BY g.gadget_id, gi.image[1], u.city, u.full_name, gr.avg_rating
+                HAVING (@minRating IS NULL OR COALESCE(gr.avg_rating, 0) >= @minRating)";
 
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -817,12 +884,14 @@ namespace PinjamDuluApp.Services
                                     Category = reader.GetString(reader.GetOrdinal("category")),
                                     Brand = reader.GetString(reader.GetOrdinal("brand")),
                                     ConditionMetric = reader.GetInt32(reader.GetOrdinal("condition_metric")),
-                                    GadgetRating = reader.GetFloat(reader.GetOrdinal("gadget_rating")),
+                                    GadgetRating = reader.GetFloat(reader.GetOrdinal("calculated_rating")), // Using the calculated rating
                                     RentalPrice = reader.GetDecimal(reader.GetOrdinal("rental_price")),
                                     Availability = reader.GetBoolean(reader.GetOrdinal("availability")),
+                                    AvailabilityDate = reader.IsDBNull(reader.GetOrdinal("availability_date")) ? null : reader.GetDateTime(reader.GetOrdinal("availability_date")),
                                     Images = reader.IsDBNull(reader.GetOrdinal("first_image")) ? null : new[] { (byte[])reader["first_image"] },
                                     TimesRented = reader.GetInt32(reader.GetOrdinal("times_rented")),
-                                    OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? null : reader.GetString(reader.GetOrdinal("owner_city"))
+                                    OwnerCity = reader.IsDBNull(reader.GetOrdinal("owner_city")) ? null : reader.GetString(reader.GetOrdinal("owner_city")),
+                                    OwnerName = reader.IsDBNull(reader.GetOrdinal("owner_name")) ? null : reader.GetString(reader.GetOrdinal("owner_name"))
                                 };
                                 gadgets.Add(gadget);
                                 System.Diagnostics.Debug.WriteLine($"Found gadget: {gadget.Title}");

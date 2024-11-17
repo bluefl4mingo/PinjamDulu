@@ -139,7 +139,7 @@ namespace PinjamDuluApp.ViewModels
             SubmitReviewCommand = new RelayCommand(SubmitReview);
             CancelReviewCommand = new RelayCommand(CancelReview);
             SearchCommand = new RelayCommand(ExecuteSearch);
-            GadgetSelectedCommand = new RelayCommand<Gadget>(OnGadgetSelected);
+            GadgetSelectedCommand = new RelayCommand<RentalItem>(OnGadgetSelected);
 
             LoadRentals(user);
         }
@@ -218,11 +218,11 @@ namespace PinjamDuluApp.ViewModels
             }
         }
 
-        private void OnGadgetSelected(Gadget gadget)
+        private void OnGadgetSelected(RentalItem gadget)
         {
             if (gadget != null)
             {
-                var navigationParams = new NavigationParameters(_currentUser, gadget);
+                var navigationParams = new NavigationParameters(_currentUser, gadget.Gadget);
                 _navigationService.NavigateTo(typeof(GadgetDetail), navigationParams.User, navigationParams.Gadget);
             }
         }

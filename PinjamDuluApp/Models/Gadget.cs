@@ -16,14 +16,12 @@ namespace PinjamDuluApp.Models
         public bool Availability { get; set; }
         public DateTime? AvailabilityDate { get; set; }
         public byte[][] Images { get; set; }
-
-
-
         // Additional properties for UI
         public int TimesRented { get; set; }
         public string CurrentRenterUsername { get; set; }
         public DateTime? CurrentRentalStart { get; set; }
         public DateTime? CurrentRentalEnd { get; set; }
         public string OwnerCity { get; set; }
+        public string OwnerName { get; set; }  // Added this property
     }
 }

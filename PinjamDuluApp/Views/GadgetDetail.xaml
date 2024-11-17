@@ -271,7 +271,7 @@
                                 <TextBlock
                                     Margin="0,10"
                                     Style="{StaticResource DataText}"
-                                    Text="Pemilik" />
+                                    Text="{Binding Gadget.OwnerName}" />
                                 <TextBlock
                                     Margin="0,10"
                                     Style="{StaticResource DataText}"
@@ -484,7 +484,7 @@
                                             <TextBlock
                                                 FontSize="16"
                                                 Foreground="Gray"
-                                                Text="{Binding ReviewDate, StringFormat='{}{0:d}'}" />
+                                                Text="{Binding ReviewDate, StringFormat='{}{0:d/MM/yyyy}'}" />
                                         </StackPanel>
 
                                         <!--  REVIEW TEXT  -->
