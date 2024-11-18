@@ -71,6 +71,7 @@ namespace PinjamDuluApp.ViewModels
         public ICommand NavigateToRentalCommand { get; }
         public ICommand NavigateToProfileCommand { get; }
         public ICommand SearchCommand { get; }
+        public ICommand BackCommand { get; }
 
         public GadgetDetailViewModel(NavigationService navigationService, User user, Gadget gadget)
         {
@@ -90,6 +91,7 @@ namespace PinjamDuluApp.ViewModels
             NavigateToRentalCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(RentalPage), user));
             NavigateToProfileCommand = new RelayCommand(() => _navigationService.NavigateTo(typeof(ProfilePage), user));
             SearchCommand = new RelayCommand(ExecuteSearch);
+            BackCommand = new RelayCommand(() => _navigationService.GoBack());
 
             // Load additional details (reviews) asynchronously
             LoadReviewsAsync(gadget.GadgetId);
