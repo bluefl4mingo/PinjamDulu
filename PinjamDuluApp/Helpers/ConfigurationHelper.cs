@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 
 namespace PinjamDuluApp.Helpers
 {
@@ -12,11 +13,22 @@ namespace PinjamDuluApp.Helpers
         {
             if (_configuration == null)
             {
-                var builder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                // Read embedded appsettings.json
+                string json = LoadEmbeddedAppSettings();
 
-                _configuration = builder.Build();
+                // Create a temporary JSON file in memory
+                using (var stream = new MemoryStream())
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(json);
+                    writer.Flush();
+                    stream.Position = 0;
+
+                    var builder = new ConfigurationBuilder()
+                        .AddJsonStream(stream);
+
+                    _configuration = builder.Build();
+                }
             }
 
             return _configuration;
@@ -35,6 +47,25 @@ namespace PinjamDuluApp.Helpers
         public static string GetStripePublishableKey()
         {
             return GetConfiguration()["Stripe:PublishableKey"];
+        }
+
+        private static string LoadEmbeddedAppSettings()
+        {
+            // Replace 'YourNamespace' with the actual namespace of your project
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream("PinjamDuluApp.appsettings.json"))
+            {
+                if (stream == null)
+                    throw new FileNotFoundException("Embedded appsettings.json not found.");
+
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string json = reader.ReadToEnd();
+
+                    // TODO: Add decryption logic here if needed
+                    return json;
+                }
+            }
         }
     }
 }
