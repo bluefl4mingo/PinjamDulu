@@ -87,7 +87,7 @@
                         Padding="0,0,0,0"
                         VerticalAlignment="Center"
                         FontSize="22"
-                        MouseDown="txtSearch_MouseDown" 
+                        MouseDown="txtSearch_MouseDown"
                         Style="{StaticResource TextHint}"
                         Text="Cari Gadget" />
                     <TextBox
@@ -168,7 +168,7 @@
         <Button
             x:Name="btnBack"
             Grid.Row="1"
-            Width="90"
+            Width="120"
             Height="30"
             Margin="40,30,0,0"
             HorizontalAlignment="Left"
@@ -177,15 +177,39 @@
             FontSize="20"
             FontWeight="SemiBold"
             Style="{StaticResource ButtonTransparent}">
-            <Grid Width="90">
+            <Grid Width="120">
                 <Rectangle
-                    Width="30"
+                    Width="25"
                     Height="3"
                     HorizontalAlignment="Left"
                     Fill="{Binding ElementName=btnBack, Path=Foreground}"
                     RadiusX="1"
                     RadiusY="1" />
-                <TextBlock HorizontalAlignment="Right" Text="Back" />
+                <Rectangle
+                    Width="12"
+                    Height="3"
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1">
+                    <Rectangle.LayoutTransform>
+                        <RotateTransform Angle="-45" />
+                    </Rectangle.LayoutTransform>
+                </Rectangle>
+                <Rectangle
+                    Width="12"
+                    Height="3"
+                    Margin="0,8,0,0"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding ElementName=btnBack, Path=Foreground}"
+                    RadiusX="1"
+                    RadiusY="1">
+                    <Rectangle.LayoutTransform>
+                        <RotateTransform Angle="45" />
+                    </Rectangle.LayoutTransform>
+                </Rectangle>
+                <TextBlock HorizontalAlignment="Right" Text="Kembali" />
             </Grid>
         </Button>
 
