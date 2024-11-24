@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Text.RegularExpressions;
+using System.Windows.Input;
 using PinjamDuluApp.Helpers;
 using PinjamDuluApp.Services;
 using PinjamDuluApp.ViewModels;
@@ -60,15 +61,40 @@ namespace PinjamDuluApp.ViewModels
                    Password == ConfirmPassword;
         }
 
+        private bool IsValidEmail(string email)
+        {          
+            // Use Regex for email validation
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, emailPattern, RegexOptions.IgnoreCase);          
+        }
+
+        private bool IsValidPassword(string password)
+        {
+            // Password must be at least 8 characters long
+            return password.Length >= 8;
+        }
+
         private async Task SignUp()
         {
             try
             {
-                if (await _databaseService.CheckEmailExists(Email))
+                if (IsValidEmail(Email) == false)
+                {
+                    ErrorMessage = "*Please enter a valid email";
+                    return;
+                }
+
+                else if(IsValidPassword(Password) == false)
+                {
+                    ErrorMessage = "*Password must be at least 8 characters long";
+                    return;
+                }
+
+                else if (await _databaseService.CheckEmailExists(Email))
                 {
                     ErrorMessage = "*Email already exists";
                     return;
-                }
+                }               
 
                 // Navigate to FillUserInfoPage with email and password as parameters
                 _navigationService.NavigateTo(typeof(FillUserInfoPage), _email, _password); // we include email and password since we need to pass those 2 data to FillUserInfoPage.

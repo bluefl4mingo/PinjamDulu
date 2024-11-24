@@ -75,6 +75,7 @@
                     <Button
                         Grid.Column="0"
                         Command="{Binding SearchCommand}"
+                        IsDefault="True"
                         Style="{StaticResource ButtonTransparentNoTrig}">
                         <Image
                             Grid.Column="0"
@@ -161,7 +162,7 @@
         <!--  LINE SEPARATOR  -->
         <Rectangle
             Grid.Row="0"
-            Width="1775"
+            Width="1825"
             Height="3"
             VerticalAlignment="Bottom"
             Fill="#EAEAEA" />
@@ -170,12 +171,12 @@
         <Button
             x:Name="btnBack"
             Grid.Row="1"
-            Panel.ZIndex="1"
             Width="120"
             Height="30"
             Margin="40,30,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
+            Panel.ZIndex="1"
             Command="{Binding BackCommand}"
             FontSize="20"
             FontWeight="SemiBold"

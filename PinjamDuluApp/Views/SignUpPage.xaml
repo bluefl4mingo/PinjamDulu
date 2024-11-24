@@ -164,6 +164,7 @@
                     Width="353"
                     Height="56"
                     Margin="0,30,0,55"
+                    IsDefault="True"
                     Command="{Binding SignUpCommand}"
                     Content="Sign Up"
                     Style="{StaticResource ButtonGeneral}" />

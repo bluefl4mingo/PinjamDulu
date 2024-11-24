@@ -51,7 +51,6 @@ namespace PinjamDuluApp.Helpers
 
         private static string LoadEmbeddedAppSettings()
         {
-            // Replace 'YourNamespace' with the actual namespace of your project
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("PinjamDuluApp.appsettings.json"))
             {
@@ -62,7 +61,7 @@ namespace PinjamDuluApp.Helpers
                 {
                     string json = reader.ReadToEnd();
 
-                    // TODO: Add decryption logic here if needed
+                    // Add decryption logic here if needed
                     return json;
                 }
             }
