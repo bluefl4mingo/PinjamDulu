@@ -77,6 +77,7 @@
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Column="0"
+                        IsDefault="True"
                         Command="{Binding SearchCommand}"
                         Style="{StaticResource ButtonTransparentNoTrig}">
                         <Image
@@ -164,7 +165,7 @@
         <!--  LINE SEPARATOR  -->
         <Rectangle
             Grid.Row="0"
-            Width="1775"
+            Width="1825"
             Height="3"
             VerticalAlignment="Bottom"
             Fill="#EAEAEA" />

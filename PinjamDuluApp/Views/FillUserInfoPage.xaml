@@ -357,6 +357,7 @@
                         Width="353"
                         Height="56"
                         Margin="0,35,0,0"
+                        IsDefault="True"
                         Command="{Binding CreateAccountCommand}"
                         Content="Buat Akun"
                         Style="{StaticResource ButtonGeneral}"

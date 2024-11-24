@@ -140,6 +140,7 @@
                     Width="353"
                     Height="56"
                     Margin="0,30,0,55"
+                    IsDefault="True"
                     Command="{Binding LoginCommand}"
                     Content="Log In"
                     Style="{StaticResource ButtonGeneral}" />
